@@ -1,7 +1,12 @@
+import Layout from "./components/Layout/Layout";
+import RoutesWrapper from "./Routes";
+
 function App() {
   return (
     <div className="App">
-      <h1>hello world</h1>
+      <Layout>
+        <RoutesWrapper />
+      </Layout>
     </div>
   );
 }
