@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
+import FixedHead from "../FixedHead/FixedHead";
 import Sidebar from "../Sidebar/Sidebar";
 
 const Container = styled.div`
@@ -23,7 +24,9 @@ const Right = styled.div`
 `;
 const Head = styled.div`
   background-color: #fff;
-  padding: 20px;
+  transition: 0.4s;
+  box-shadow: 5px 0 0 #f2f4f6,
+    0 1px 3px ${(p) => (p.y < 65 ? "#005036, 0 0 5px #005036" : "transparent")};
   position: sticky;
   left: 0;
   top: 0;
@@ -37,14 +40,32 @@ const Body = styled.div`
 `;
 
 const Layout = ({ children }) => {
+  const bodyRef = useRef(null);
+
+  const [y, setY] = useState();
+
+  const getPosition = () => {
+    const y = bodyRef.current.getBoundingClientRect().y;
+    setY(y);
+  };
+
+  useEffect(() => {
+    getPosition();
+  }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", getPosition);
+  }, []);
+
   return (
     <Container>
       <Left>
         <Sidebar />
       </Left>
       <Right>
-        <Head>This is heading section</Head>
-        <Body>{children}</Body>
+        <Head y={y}>
+          <FixedHead />
+        </Head>
+        <Body ref={bodyRef}>{children}</Body>
       </Right>
     </Container>
   );
