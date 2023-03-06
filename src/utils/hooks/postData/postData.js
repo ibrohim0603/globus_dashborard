@@ -1,4 +1,4 @@
-import instance from "../../axios";
+import { instance } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePostData = (url) => {
