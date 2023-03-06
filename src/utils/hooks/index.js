@@ -1,5 +1,4 @@
 import { useGetData } from "./getData/getData";
+import { usePostData } from "./postData/postData";
 
-export default {
-  useGetData,
-};
+export { useGetData, usePostData };
