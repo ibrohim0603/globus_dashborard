@@ -13,7 +13,10 @@ const Container = styled.div`
 const Top = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #734;
+  /* background-color: #f4f6f8; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;
 const ProductsWrapper = styled.div`
   display: flex;
@@ -48,10 +51,13 @@ const Products = () => {
       ) : (
         <Container>
           <Top>
-            <Button type="primary" onClick={() => setModalOpen(true)}>
-              Create
+            <Button
+              type="primary"
+              onClick={() => setModalOpen(true)}
+              size="large"
+            >
+              Create Product
             </Button>
-
           </Top>
           <ProductsWrapper>
             {slicedProducts?.map((p, idx) => (
@@ -73,7 +79,6 @@ const Products = () => {
             />
           </Pag>
         </Container>
-
       )}
       <PostProductModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </>
