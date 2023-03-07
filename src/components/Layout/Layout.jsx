@@ -30,13 +30,12 @@ const Head = styled.div`
   position: sticky;
   left: 0;
   top: 0;
+  z-index: 1000;
 `;
 const Body = styled.div`
   margin: 15px 0 0 15px;
   padding: 10px;
   background-color: #fff;
-
-  min-height: 900px;
 `;
 
 const Layout = ({ children }) => {

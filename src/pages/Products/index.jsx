@@ -1,12 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Pagination } from "antd";
 import { useGetData } from "../../utils/hooks";
+import SingleProduct from "./SingleProduct/SingleProduct";
+
+const Container = styled.div`
+  width: 100%;
+  padding-bottom: 30px;
+`;
+const Top = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: #734;
+`;
+const ProductsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0 50px;
+`;
+const Pag = styled.div`
+  width: 100%;
+  display: grid;
+  place-items: center;
+`;
 
 const Products = () => {
-  const products = useGetData(["products"], `/products?take=99999`, {});
+  const [limit, setLimit] = useState(10);
+  const [current, setCurrent] = useState(1);
+  const [slicedProducts, setSlicedProduts] = useState(null);
 
-  console.log(products);
+  const products = useGetData(["products"], `/products?take=99999`);
 
-  return <div>Products</div>;
+  useEffect(() => {
+    setSlicedProduts(
+      products?.data?.data?.slice((current - 1) * limit, current * limit)
+    );
+  }, [limit, current, products?.data?.data]);
+
+  return (
+    <>
+      {products.isLoading ? (
+        "Loading"
+      ) : (
+        <Container>
+          <Top></Top>
+          <ProductsWrapper>
+            {slicedProducts?.map((p, idx) => (
+              <SingleProduct
+                key={p.id}
+                prod={p}
+                idx={idx + (current - 1) * limit}
+              />
+            ))}
+          </ProductsWrapper>
+          <Pag>
+            <Pagination
+              current={current}
+              onChange={(c, l) => {
+                setCurrent(c);
+                setLimit(l);
+              }}
+              total={products?.data?.total}
+            />
+          </Pag>
+        </Container>
+      )}
+    </>
+  );
 };
 
 export default Products;
