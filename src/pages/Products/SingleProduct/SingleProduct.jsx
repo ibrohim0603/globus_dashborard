@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { Button } from "antd";
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import { Button, Modal } from "antd";
+import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
+import { useDeleteData } from "../../../utils/hooks";
+import { QueryContext } from "../../../App";
+
+const { confirm } = Modal;
 
 const Container = styled.div`
   width: 100%;
@@ -62,6 +66,27 @@ const DeleteBtn = styled(EditBtn)`
 `;
 
 const SingleProduct = ({ prod, idx }) => {
+  const { queryClient } = useContext(QueryContext);
+  const deleteMutation = useDeleteData(`/products/${prod?.id}`);
+
+  const delBtn = () => {
+    deleteMutation.mutate({
+      onSucces: (d) =>
+        queryClient.invalidateQueries({ queryKey: ["products"] }),
+    });
+  };
+  const showConfirmDelBtn = () => {
+    confirm({
+      title: "Are you sure you want to delete this product?",
+      icon: <AiFillWarning style={{ fontSize: "40px", color: "red" }} />,
+      content: "If you click OK, the product will be deleted!",
+      onOk() {
+        // delBtn();
+        console.log("ok working");
+      },
+    });
+  };
+
   return (
     <Container>
       <Left>
@@ -70,10 +95,10 @@ const SingleProduct = ({ prod, idx }) => {
         <Price>{prod?.price} so'm</Price>
       </Left>
       <BtnWrap>
-        <EditBtn hover>
+        <EditBtn>
           <AiOutlineEdit />
         </EditBtn>
-        <DeleteBtn>
+        <DeleteBtn onClick={() => showConfirmDelBtn()}>
           <AiOutlineDelete />
         </DeleteBtn>
       </BtnWrap>
