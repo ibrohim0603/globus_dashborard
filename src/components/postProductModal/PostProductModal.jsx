@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Modal } from 'antd';
-const PostProductModal = (props, { children }) => {
-  const { modalOpen, setModalOpen } = props
+import React, { useState } from "react";
+import { Modal } from "antd";
+const PostProductModal = ({ modalOpen, setModalOpen, children }) => {
+  // const { modalOpen, setModalOpen } = props
 
   return (
     <>
@@ -15,7 +15,7 @@ const PostProductModal = (props, { children }) => {
         {children}
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default PostProductModal;

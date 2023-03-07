@@ -5,6 +5,7 @@ import { useGetData } from "../../utils/hooks";
 import SingleProduct from "./SingleProduct/SingleProduct";
 import { Modal, Button } from "antd";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
+import PostForm from "../../components/postForm/postForm";
 
 const Container = styled.div`
   width: 100%;
@@ -80,7 +81,9 @@ const Products = () => {
           </Pag>
         </Container>
       )}
-      <PostProductModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <PostProductModal modalOpen={modalOpen} setModalOpen={setModalOpen}>
+        <PostForm />
+      </PostProductModal>
     </>
   );
 };
