@@ -1,22 +1,14 @@
-import React from 'react'
-import { PlusOutlined } from '@ant-design/icons';
-import {
-  Form,
-  Input,
-  Button,
-  Radio,
-  Select,
-  Upload,
-} from 'antd';
+import React from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Radio, Select, Upload } from "antd";
 
 const PostForm = () => {
-
   const onFinish = (values) => {
-    console.log('Success:', values);
+    console.log("Success:", values);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -24,7 +16,6 @@ const PostForm = () => {
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 14 }}
       layout="horizontal"
-      disabled={componentDisabled}
       style={{ maxWidth: 600 }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -54,10 +45,12 @@ const PostForm = () => {
         </Upload>
       </Form.Item>
       <Form.Item label="Button">
-        <Button type="primary" htmlType="submit">Button</Button>
+        <Button type="primary" htmlType="submit">
+          Button
+        </Button>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default PostForm
+export default PostForm;
