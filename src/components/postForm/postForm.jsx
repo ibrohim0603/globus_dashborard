@@ -1,5 +1,13 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Button,
+  Radio,
+  Select,
+  Upload,
+} from 'antd';
 
 const PostForm = () => {
 
