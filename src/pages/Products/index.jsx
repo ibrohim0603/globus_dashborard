@@ -69,16 +69,21 @@ const Products = () => {
               />
             ))}
           </ProductsWrapper>
-          <Pag>
-            <Pagination
-              current={current}
-              onChange={(c, l) => {
-                setCurrent(c);
-                setLimit(l);
-              }}
-              total={products?.data?.total}
-            />
-          </Pag>
+          {products?.data?.total > 10 && (
+            <Pag>
+              <Pagination
+                current={current}
+                onChange={(c, l) => {
+                  setCurrent(c);
+                  setLimit(l);
+                }}
+                total={products?.data?.total}
+              />
+            </Pag>
+          )}
+          {products?.data?.total == 0 && (
+            <h2>no data(this section needs to change)</h2>
+          )}
         </Container>
       )}
       <PostProductModal modalOpen={modalOpen} setModalOpen={setModalOpen}>
