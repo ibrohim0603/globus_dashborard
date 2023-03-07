@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Modal } from 'antd';
-const PostProductModal = (props) => {
+const PostProductModal = (props, { children }) => {
   const { modalOpen, setModalOpen } = props
 
   return (
@@ -12,9 +12,7 @@ const PostProductModal = (props) => {
         onOk={() => setModalOpen(false)}
         onCancel={() => setModalOpen(false)}
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        {children}
       </Modal>
     </>
   )
