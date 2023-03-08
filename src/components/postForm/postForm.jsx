@@ -1,6 +1,6 @@
 import React from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Radio, Select, Upload } from "antd";
+import { Form, Input, Button, Radio, Select, Upload, message } from "antd";
 
 const PostForm = () => {
   const onFinish = (values) => {
@@ -20,37 +20,46 @@ const PostForm = () => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
-      <Form.Item label="Radio">
+      {/* <Form.Item label="Radio">
         <Radio.Group>
-          <Radio value="apple"> Male </Radio>
-          <Radio value="pear"> Female </Radio>
-          <Radio value="pear"> Both </Radio>
+          <Radio value="male"> Male </Radio>
+          <Radio value="female"> Female </Radio>
+          <Radio value="both"> Both </Radio>
         </Radio.Group>
       </Form.Item>
-      <Form.Item label="Input">
+      <Form.Item label="Input"  >
         <Input />
       </Form.Item>
       <Form.Item label="Select">
         <Select>
           <Select.Option value="demo">Demo</Select.Option>
         </Select>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label="Upload" valuePropName="fileList">
-        <Upload action="/upload.do" listType="picture-card">
-          <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-          </div>
+        <Upload {...props}>
+          <Button>Click to Upload</Button>
         </Upload>
-      </Form.Item>
-      <Form.Item label="Button">
-        <Button type="primary" htmlType="submit">
-          Button
-        </Button>
       </Form.Item>
     </Form>
   );
 };
 
 export default PostForm;
+const props = {
+  name: "photo",
+  action: "http://3.19.30.204/upload/upload",
+  headers: {
+    authorization: "authorization-text",
+  },
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};

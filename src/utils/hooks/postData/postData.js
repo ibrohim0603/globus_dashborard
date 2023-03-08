@@ -1,6 +1,6 @@
 import { instance } from "../../axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export const usePostData = (url) => {
-  return useQuery((data) => instance.post(url, data));
+  return useMutation((data) => instance.post(url, data));
 };
