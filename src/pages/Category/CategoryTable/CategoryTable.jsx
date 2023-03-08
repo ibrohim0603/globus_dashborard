@@ -1,9 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Table, Button } from "antd";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import { useDeleteData } from "../../../utils/hooks";
 import { QueryContext } from "../../../App";
+import PostProductModal from "../../../components/postProductModal/PostProductModal";
+import CategoryEdit from "../CategoryEdit/CategoryEdit";
 
 const BtnWrap = styled.div`
   display: flex;
@@ -33,9 +35,16 @@ const DeleteBtn = styled(EditBtn)`
 `;
 
 const CategoryTable = ({ categories }) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const { data } = categories?.data;
   const delMut = useDeleteData(`/category`);
   const { queryClient } = useContext(QueryContext);
+  const editRef = useRef(null);
+  const [idx, setIdx] = useState(null);
+
+  const resForm = () => {
+    editRef.current.resetFields();
+  };
 
   const delBtn = (id) => {
     delMut.mutate(
@@ -63,7 +72,12 @@ const CategoryTable = ({ categories }) => {
       ),
       btns: (
         <BtnWrap>
-          <EditBtn>
+          <EditBtn
+            onClick={() => {
+              setIdx(d?.id);
+              setModalOpen(true);
+            }}
+          >
             <AiOutlineEdit />
           </EditBtn>
           <DeleteBtn onClick={() => delBtn(d?.id)}>
@@ -77,6 +91,13 @@ const CategoryTable = ({ categories }) => {
   return (
     <>
       <Table columns={columns} dataSource={dataSource} />
+      <PostProductModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        resForm={resForm}
+      >
+        <CategoryEdit editRef={editRef} id={idx} setModalOpen={setModalOpen} />
+      </PostProductModal>
     </>
   );
 };

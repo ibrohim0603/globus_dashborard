@@ -51,7 +51,10 @@ const Category = () => {
           {categories?.isLoading ? (
             "Loading"
           ) : (
-            <CategoryTable categories={categories} />
+            <CategoryTable
+              categories={categories}
+              setModalOpen={setModalOpen}
+            />
           )}
         </CategoryWrapper>
       </Container>
