@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Pagination } from "antd";
 import { useGetData } from "../../utils/hooks";
-import SingleProduct from "./SingleProduct/SingleProduct";
 import { Modal, Button } from "antd";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import PostForm from "../../components/postForm/postForm";
+import ProductsTable from "./ProductsTable/ProductsTable";
+import AddProductForm from "./AddProductForm/AddProductForm";
 
 const Container = styled.div`
   width: 100%;
@@ -36,6 +36,10 @@ const Products = () => {
   const [current, setCurrent] = useState(1);
   const [slicedProducts, setSlicedProduts] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const addRef = useRef(null);
+  const addFormRes = () => {
+    addRef?.current?.resetFields();
+  };
 
   const products = useGetData(["products"], `/products?take=99999`);
 
@@ -60,34 +64,18 @@ const Products = () => {
               Create Product
             </Button>
           </Top>
+
           <ProductsWrapper>
-            {slicedProducts?.map((p, idx) => (
-              <SingleProduct
-                key={p.id}
-                prod={p}
-                idx={idx + (current - 1) * limit}
-              />
-            ))}
+            <ProductsTable data={slicedProducts} />
           </ProductsWrapper>
-          {products?.data?.total > 10 && (
-            <Pag>
-              <Pagination
-                current={current}
-                onChange={(c, l) => {
-                  setCurrent(c);
-                  setLimit(l);
-                }}
-                total={products?.data?.total}
-              />
-            </Pag>
-          )}
-          {products?.data?.total == 0 && (
-            <h2>no data(this section needs to change)</h2>
-          )}
         </Container>
       )}
-      <PostProductModal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-        <PostForm />
+      <PostProductModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        resForm={addFormRes}
+      >
+        <AddProductForm addRef={addRef} setModalOpen={setModalOpen} />
       </PostProductModal>
     </>
   );

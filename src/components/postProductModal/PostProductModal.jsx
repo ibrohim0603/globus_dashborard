@@ -8,6 +8,7 @@ const PostProductModal = ({ modalOpen, setModalOpen, children, resForm }) => {
       <Modal
         title="Please fill in all fields"
         centered
+        width={900}
         open={modalOpen}
         onOk={() => setModalOpen(false)}
         onCancel={() => {
