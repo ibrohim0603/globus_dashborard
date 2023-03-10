@@ -43,6 +43,7 @@ const CategoryTable = ({ categories }) => {
   const [idx, setIdx] = useState(null);
 
   const resForm = () => {
+    setModalOpen(false);
     editRef.current.resetFields();
   };
 
