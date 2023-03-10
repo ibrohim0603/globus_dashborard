@@ -1,25 +1,53 @@
-import { Table } from "antd";
+import { Button, Row, Table, Tag, Col } from "antd";
 import React from "react";
+import PostProductModal from "../../components/postProductModal/PostProductModal";
 import { useGetData } from "../../utils/hooks";
+import InfoAdd from "./InfoAdd/InfoAdd";
+import InfoEdit from "./InfoEdit/InfoEdit";
 
 const Info = () => {
   const infos = useGetData(["infos"], "/information");
   const item = infos?.data?.data?.[0];
-  console.log(item);
+  // console.log(item);
   const dataSource = [
     {
       email: item?.email,
-      tel: item?.phone[0],
-      phone: item?.phone[1],
+      tags: item?.phone,
       telegram: item?.telegram,
       instagram: item?.instagram,
       address: item?.address,
     },
   ];
 
+  if (infos?.data?.data.length >= 0) {
+    console.log(infos?.data?.data);
+    return <InfoAdd />;
+  }
+
   return (
     <>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        pagination={false}
+        dataSource={dataSource}
+        columns={columns}
+        footer={(details) => {
+          return (
+            <>
+              <Row justify="end">
+                <Col span={2}>
+                  <Button type="primary">Edit</Button>
+                </Col>
+                <Col span={2}>
+                  <Button danger>Delete</Button>
+                </Col>
+              </Row>
+            </>
+          );
+        }}
+      />
+      <PostProductModal>
+        <InfoEdit />
+      </PostProductModal>
     </>
   );
 };
@@ -49,12 +77,18 @@ const columns = [
   },
   {
     title: "Phone numbers",
-    colSpan: 2,
-    dataIndex: "tel",
-  },
-  {
-    title: "Phone",
-    colSpan: 0,
-    dataIndex: "phone",
+    dataIndex: "tags",
+    key: "tags",
+    render: (_, { tags }) => (
+      <>
+        {tags?.map((tag, i) => {
+          return (
+            <Tag color="green" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
   },
 ];

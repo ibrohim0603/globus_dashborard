@@ -25,11 +25,6 @@ const ProductsWrapper = styled.div`
   gap: 10px;
   margin: 20px 0 50px;
 `;
-const Pag = styled.div`
-  width: 100%;
-  display: grid;
-  place-items: center;
-`;
 
 const Products = () => {
   const [modalOpen, setModalOpen] = useState(false);

@@ -39,10 +39,10 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
   };
 
   const onFinish = (values) => {
-    console.log("Success:", {
-      ...values,
-      photoId: values?.photoId?.file.response.id,
-    });
+    // console.log("Success:", {
+    //   ...values,
+    //   photoId: values?.photoId?.file.response.id,
+    // });
     postMutate.mutate(
       {
         ...values,
