@@ -50,7 +50,7 @@ const ProductsTable = ({ data }) => {
       { id },
       {
         onSuccess: () => {
-          console.log("deleted");
+          // console.log("deleted");
           queryClient.invalidateQueries({ queryKey: ["products"] });
         },
       }
@@ -70,9 +70,7 @@ const ProductsTable = ({ data }) => {
       name_En: d.name_En,
       price: d?.price,
       discount: d?.discount,
-      description_Uz:
-        d?.description_Uz +
-        " lksjfsnfjskfkfafjksfkjsfjksfkjdfkjsfjkssjkskjskjsjksjksfkskjsdjksfjkdsnfjknsdfnafnjafjkasfjkjnaervneanv[uin[rverwfnksjdvnkj",
+      description_Uz: d?.description_Uz,
       description_Ru: d?.description_Ru,
       description_En: d?.description_En,
       category_Uz: d?.Category.name_Uz,
