@@ -41,7 +41,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
   const onFinish = (values) => {
     console.log("Success:", {
       ...values,
-      photoId,
+      photoId: values?.photoId?.file.response.id,
     });
     postMutate.mutate(
       {
@@ -221,7 +221,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
         </Form.Item>
 
         <Form.Item
-          // name="photoId"
+          name="photoId"
           rules={[{ required: true, message: "Please, upload photo" }]}
         >
           <Upload {...props} style={{ width: "100%" }}>
