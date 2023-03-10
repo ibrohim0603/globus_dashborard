@@ -1,10 +1,17 @@
-import { Table, Button } from "antd";
-import React, {useState, useRef} from "react";
-import { useGetData } from "../../utils/hooks";
+// <<<<<<< HEAD
+import { Button, Row, Table, Tag, Col } from "antd";
+import React from "react";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
-import styled from "styled-components";
-import AddInfoForm from "./addInfoForm/addInfoForm";
-
+import { useGetData } from "../../utils/hooks";
+import InfoAdd from "./InfoAdd/InfoAdd";
+import InfoEdit from "./InfoEdit/InfoEdit";
+// =======
+// import { Table, Button } from "antd";
+// import React, {useState, useRef} from "react";
+// import { useGetData } from "../../utils/hooks";
+// import PostProductModal from "../../components/postProductModal/PostProductModal";
+// import styled from "styled-components";
+// import AddInfoForm from "./addInfoForm/addInfoForm";
 
 const Container = styled.div`
   width: 100%;
@@ -26,11 +33,14 @@ const InfoWrapper = styled.div`
   margin: 20px 0;
 `;
 
-
+// >>>>>>> 79c9eae2c6ef3211191e9c1fbd0fc67631e05d82
 
 const Info = () => {
   const infos = useGetData(["infos"], "/information");
   const item = infos?.data?.data?.[0];
+  // <<<<<<< HEAD
+  // console.log(item);
+  // =======
 
   const [modalOpen, setModalOpen] = useState(false);
   const formRef = useRef(null);
@@ -41,47 +51,82 @@ const Info = () => {
   };
 
   console.log(item);
+  // >>>>>>> 79c9eae2c6ef3211191e9c1fbd0fc67631e05d82
   const dataSource = [
     {
       email: item?.email,
-      tel: item?.phone[0],
-      phone: item?.phone[1],
+      tags: item?.phone,
       telegram: item?.telegram,
       instagram: item?.instagram,
       address: item?.address,
     },
   ];
 
-  console.log(infos);
+  // <<<<<<< HEAD
+  if (infos?.data?.data.length >= 0) {
+    console.log(infos?.data?.data);
+    return <InfoAdd />;
+  }
 
   return (
     <>
-      <Container>
-        <Top>
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => setModalOpen(true)}
-          >
-            Add Information
-          </Button>
-        </Top>
-        <InfoWrapper>
-
-          <Table dataSource={dataSource} columns={columns} />
-        </InfoWrapper>
-      </Container>
-
-      <PostProductModal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        resForm={resForm}
-      >
-        <AddInfoForm formRef={formRef} setModalOpen={setModalOpen} />
+      <Table
+        pagination={false}
+        dataSource={dataSource}
+        columns={columns}
+        footer={(details) => {
+          return (
+            <>
+              <Row justify="end">
+                <Col span={2}>
+                  <Button type="primary">Edit</Button>
+                </Col>
+                <Col span={2}>
+                  <Button danger>Delete</Button>
+                </Col>
+              </Row>
+            </>
+          );
+        }}
+      />
+      <PostProductModal>
+        <InfoEdit />
       </PostProductModal>
     </>
   );
 };
+
+// console.log(infos);
+
+//   return (
+//     <>
+//       <Container>
+//         <Top>
+//           <Button
+//             type="primary"
+//             size="large"
+//             onClick={() => setModalOpen(true)}
+//           >
+//             Add Information
+//           </Button>
+//         </Top>
+//         <InfoWrapper>
+
+//           <Table dataSource={dataSource} columns={columns} />
+//         </InfoWrapper>
+//       </Container>
+
+//       <PostProductModal
+//         modalOpen={modalOpen}
+//         setModalOpen={setModalOpen}
+//         resForm={resForm}
+//       >
+//         <AddInfoForm formRef={formRef} setModalOpen={setModalOpen} />
+// >>>>>>> 79c9eae2c6ef3211191e9c1fbd0fc67631e05d82
+//       </PostProductModal>
+//     </>
+//   );
+// };
 
 export default Info;
 
@@ -108,12 +153,18 @@ const columns = [
   },
   {
     title: "Phone numbers",
-    colSpan: 2,
-    dataIndex: "tel",
-  },
-  {
-    title: "Phone",
-    colSpan: 0,
-    dataIndex: "phone",
+    dataIndex: "tags",
+    key: "tags",
+    render: (_, { tags }) => (
+      <>
+        {tags?.map((tag, i) => {
+          return (
+            <Tag color="green" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
   },
 ];
