@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Modal } from "antd";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import { useDeleteData } from "../../../utils/hooks";
@@ -52,11 +52,27 @@ const CategoryTable = ({ categories }) => {
       { id },
       {
         onSuccess: () => {
-          console.log("success");
+          // console.log("success");
           queryClient.invalidateQueries({ queryKey: ["categories"] });
         },
       }
     );
+  };
+
+  const { confirm } = Modal;
+  const showConfirm = (id) => {
+    confirm({
+      title: "Are you sure you want to delete the category?",
+      // icon: <ExclamationCircleFilled />,
+      // content: "Some descriptions",
+      onOk() {
+        delBtn(id);
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
   };
 
   const dataSource = data?.map((d, i) => {
@@ -81,7 +97,7 @@ const CategoryTable = ({ categories }) => {
           >
             <AiOutlineEdit />
           </EditBtn>
-          <DeleteBtn onClick={() => delBtn(d?.id)}>
+          <DeleteBtn onClick={() => showConfirm(d?.id)}>
             <AiOutlineDelete />
           </DeleteBtn>
         </BtnWrap>

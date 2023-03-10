@@ -54,6 +54,11 @@ const columns = [
     key: "phone",
   },
   {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+  },
+  {
     title: "Select",
     dataIndex: "select",
     key: "select",

@@ -52,6 +52,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
         onSuccess: (d) => {
           console.log(d, "<[----------------------");
           queryClient.invalidateQueries({ queryKey: ["products"] });
+          setModalOpen(false);
         },
       }
     );
