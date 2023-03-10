@@ -1,4 +1,4 @@
-import { Table, Button } from "antd";
+import { Table, Button, Modal } from "antd";
 import React, { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
@@ -57,6 +57,22 @@ const ProductsTable = ({ data }) => {
     );
   };
 
+  const { confirm } = Modal;
+  const showConfirm = (id) => {
+    confirm({
+      title: "Are you sure you want to delete the product?",
+      // icon: <ExclamationCircleFilled />,
+      // content: "Some descriptions",
+      onOk() {
+        delBtn(id);
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
+
   const editFormRes = () => {
     setModalOpen(false);
     editRef?.current?.resetFields();
@@ -93,7 +109,7 @@ const ProductsTable = ({ data }) => {
           >
             <AiOutlineEdit />
           </EditBtn>
-          <DeleteBtn onClick={() => delBtn(d?.id)}>
+          <DeleteBtn onClick={() => showConfirm(d?.id)}>
             <AiOutlineDelete />
           </DeleteBtn>
         </BtnWrap>
