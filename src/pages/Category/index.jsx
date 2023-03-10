@@ -32,6 +32,7 @@ const Category = () => {
   const formRef = useRef(null);
 
   const resForm = () => {
+    setModalOpen(false);
     formRef.current.resetFields();
   };
 

@@ -32,22 +32,15 @@ const Pag = styled.div`
 `;
 
 const Products = () => {
-  const [limit, setLimit] = useState(10);
-  const [current, setCurrent] = useState(1);
-  const [slicedProducts, setSlicedProduts] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const addRef = useRef(null);
+
   const addFormRes = () => {
+    setModalOpen(false);
     addRef?.current?.resetFields();
   };
 
   const products = useGetData(["products"], `/products?take=99999`);
-
-  useEffect(() => {
-    setSlicedProduts(
-      products?.data?.data?.slice((current - 1) * limit, current * limit)
-    );
-  }, [limit, current, products?.data?.data]);
 
   return (
     <>
@@ -66,7 +59,7 @@ const Products = () => {
           </Top>
 
           <ProductsWrapper>
-            <ProductsTable data={slicedProducts} />
+            <ProductsTable data={products?.data?.data} />
           </ProductsWrapper>
         </Container>
       )}

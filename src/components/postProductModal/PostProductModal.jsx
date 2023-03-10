@@ -6,14 +6,16 @@ const PostProductModal = ({ modalOpen, setModalOpen, children, resForm }) => {
   return (
     <>
       <Modal
+        forceRender={true}
         title="Please fill in all fields"
         centered
         width={900}
         open={modalOpen}
-        onOk={() => setModalOpen(false)}
-        onCancel={() => {
-          setModalOpen(false);
+        // onOk={() => setModalOpen(false)}
+        onCancel={(r) => {
+          // setModalOpen(false);
           resForm();
+          // console.log(r);
         }}
         footer={null}
       >

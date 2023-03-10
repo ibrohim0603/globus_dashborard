@@ -13,6 +13,7 @@ import { useGetData, usePostData } from "../../../utils/hooks";
 import { QueryContext } from "../../../App";
 
 const AddProductForm = ({ addRef, setModalOpen }) => {
+  const [photoId, setPhotoId] = useState(null);
   const categs = useGetData(["categories"], "/category");
   const { queryClient } = useContext(QueryContext);
 
@@ -29,7 +30,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        // setPhotoId(info.file.response.id);
+        setPhotoId(info.file.response.id);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -40,12 +41,12 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
   const onFinish = (values) => {
     console.log("Success:", {
       ...values,
-      photoId: values.photoId.file.response?.id,
+      photoId,
     });
     postMutate.mutate(
       {
         ...values,
-        photoId: values.photoId.file.response?.id,
+        photoId,
       },
       {
         onSuccess: (d) => {
@@ -147,12 +148,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
         >
           <Input placeholder="color" />
         </Form.Item>
-        <Form.Item
-          name="size"
-          rules={[{ required: true, message: "Please, write size" }]}
-        >
-          <Input placeholder="size" size="middle" style={{ width: "100%" }} />
-        </Form.Item>
+
         <Form.Item
           name="discount"
           rules={[{ required: true, message: "Please, write discount" }]}
@@ -217,14 +213,14 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
             placeholder="Please, select a gender"
             options={[
               { value: "MALE", label: "Male" },
-              { value: "FEMLAE", label: "Female" },
+              { value: "FEMALE", label: "Female" },
               { value: "BOTH", label: "Both" },
             ]}
           />
         </Form.Item>
 
         <Form.Item
-          name="photoId"
+          // name="photoId"
           rules={[{ required: true, message: "Please, upload photo" }]}
         >
           <Upload {...props} style={{ width: "100%" }}>

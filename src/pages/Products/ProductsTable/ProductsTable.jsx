@@ -1,7 +1,11 @@
 import { Table, Button } from "antd";
-import React from "react";
+import React, { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
+import PostProductModal from "../../../components/postProductModal/PostProductModal";
+import EditProductForm from "../EditProductForm/EditProductForm";
+import { useDeleteData } from "../../../utils/hooks";
+import { QueryContext } from "../../../App";
 
 const Container = styled.div`
   /* overflow-x: scroll; */
@@ -34,6 +38,30 @@ const DeleteBtn = styled(EditBtn)`
 `;
 
 const ProductsTable = ({ data }) => {
+  const editRef = useRef(null);
+  const [id, setId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { queryClient } = useContext(QueryContext);
+
+  const delMut = useDeleteData("/products");
+
+  const delBtn = (id) => {
+    delMut.mutate(
+      { id },
+      {
+        onSuccess: () => {
+          console.log("deleted");
+          queryClient.invalidateQueries({ queryKey: ["products"] });
+        },
+      }
+    );
+  };
+
+  const editFormRes = () => {
+    setModalOpen(false);
+    editRef?.current?.resetFields();
+  };
+
   const dataSource = data?.map((d, i) => {
     return {
       key: i,
@@ -59,10 +87,15 @@ const ProductsTable = ({ data }) => {
       ),
       btns: (
         <BtnWrap>
-          <EditBtn>
+          <EditBtn
+            onClick={() => {
+              setModalOpen(true);
+              setId(d?.id);
+            }}
+          >
             <AiOutlineEdit />
           </EditBtn>
-          <DeleteBtn>
+          <DeleteBtn onClick={() => delBtn(d?.id)}>
             <AiOutlineDelete />
           </DeleteBtn>
         </BtnWrap>
@@ -73,6 +106,18 @@ const ProductsTable = ({ data }) => {
   return (
     <Container>
       <Table columns={columns} dataSource={dataSource} scroll={{ x: 1500 }} />
+      <PostProductModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        resForm={editFormRes}
+      >
+        <EditProductForm
+          editRef={editRef}
+          setModalOpen={setModalOpen}
+          modalOpen={modalOpen}
+          id={id}
+        />
+      </PostProductModal>
     </Container>
   );
 };
