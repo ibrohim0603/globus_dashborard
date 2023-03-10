@@ -63,6 +63,9 @@ const CategoryTable = ({ categories }) => {
   const showConfirm = (id) => {
     confirm({
       title: "Are you sure you want to delete the category?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       // icon: <ExclamationCircleFilled />,
       // content: "Some descriptions",
       onOk() {

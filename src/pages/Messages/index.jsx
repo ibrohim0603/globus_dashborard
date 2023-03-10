@@ -1,9 +1,54 @@
-import { Button, Table } from "antd";
-import React from "react";
-import { useGetData } from "../../utils/hooks";
+import { Button, Table, Modal, message } from "antd";
+import React, { useContext } from "react";
+import { QueryContext } from "../../App";
+import { useEditData, useGetData } from "../../utils/hooks";
 
 const Messages = () => {
   const messages = useGetData(["messages"], "/message");
+  const { queryClient } = useContext(QueryContext);
+
+  const messageMut = useEditData("/message");
+
+  const { confirm } = Modal;
+  const showConfirm = (text, id) => {
+    confirm({
+      title: text,
+      okText: "Resolve",
+      // okType: "success",
+      cancelText: "Exit",
+      onOk() {
+        messageMut.mutate(
+          {
+            id,
+            value: { status: "RESOLVED" },
+          },
+          {
+            onSuccess: () => {
+              message.success(`This message was successfully resolved`);
+              queryClient.invalidateQueries({ queryKey: ["messages"] });
+            },
+          }
+        );
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
+  const rejBtn = (id) => {
+    messageMut.mutate(
+      {
+        id,
+        value: { status: "REJECTED" },
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["messages"] });
+          message.success(`This message was successfully rejected`);
+        },
+      }
+    );
+  };
 
   const dataSource = messages?.data?.data.map((d, i) => {
     return {
@@ -14,15 +59,26 @@ const Messages = () => {
       // message: d?.message,
       phone: d?.phone,
       status: d?.status,
-      select: <Button style={{ color: "#005036" }}>Read</Button>,
-      del: <Button danger>Remove</Button>,
+      select: (
+        <Button
+          onClick={() => showConfirm(d?.message, d?.id)}
+          style={{ color: "#005036" }}
+        >
+          Read
+        </Button>
+      ),
+      del: (
+        <Button onClick={() => rejBtn(d?.id)} danger>
+          Rejected
+        </Button>
+      ),
     };
   });
 
   return (
-    <div>
+    <>
       <Table columns={columns} dataSource={dataSource} />
-    </div>
+    </>
   );
 };
 

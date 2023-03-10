@@ -63,6 +63,9 @@ const ProductsTable = ({ data }) => {
       title: "Are you sure you want to delete the product?",
       // icon: <ExclamationCircleFilled />,
       // content: "Some descriptions",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
         delBtn(id);
         queryClient.invalidateQueries({ queryKey: ["products"] });
