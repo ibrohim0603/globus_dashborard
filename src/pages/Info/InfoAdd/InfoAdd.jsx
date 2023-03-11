@@ -1,11 +1,21 @@
-import { Button, Col, Form, Input, Row } from "antd";
-import React, { useRef, useState } from "react";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import { Button, Col, Form, Input, message, Row } from "antd";
+import React, { useContext, useRef, useState } from "react";
+import {
+  AiOutlinePlusCircle,
+  AiOutlineMinusCircle,
+  AiOutlinePlus,
+} from "react-icons/ai";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
+import { usePostData } from "../../../utils/hooks";
+import { QueryContext } from "../../../App";
 
 const InfoAdd = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const addRef = useRef(null);
+  const { queryClient } = useContext(QueryContext);
+
+  const postMut = usePostData("/information");
 
   const addResForm = () => {
     setModalOpen(false);
@@ -13,7 +23,22 @@ const InfoAdd = () => {
   };
 
   const onFinish = (values) => {
-    console.log(values);
+    if (!values?.phone) {
+      message.error("Tel nomer qushing");
+    } else {
+      postMut.mutate(
+        {
+          ...values,
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["infos"] });
+            addRef.current.resetFields();
+            setModalOpen(false);
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -114,6 +139,7 @@ const InfoAdd = () => {
           >
             <Input placeholder="Please input your telegram!" />
           </Form.Item>
+
           <Form.Item
             name="instagram"
             rules={[
@@ -125,60 +151,65 @@ const InfoAdd = () => {
           >
             <Input placeholder="Please input your instagram!" />
           </Form.Item>
-        </Form>
-        <Form.List name="phones">
-          {(fields, { add, remove }, { errors }) => (
-            <>
-              {fields.map((field, index) => (
-                <Form.Item
-                  label={index === 0 ? "Passengers" : ""}
-                  required={false}
-                  key={field.key}
-                >
+
+          <Form.List name="phone">
+            {(fields, { add, remove }, { errors }) => (
+              <>
+                {fields.map((field, index) => (
                   <Form.Item
-                    {...field}
-                    validateTrigger={["onChange", "onBlur"]}
-                    rules={[
-                      {
-                        required: true,
-                        whitespace: true,
-                        message:
-                          "Please input passenger's name or delete this field.",
-                      },
-                    ]}
-                    noStyle
+                    // label={}
+                    required={false}
+                    key={field.key}
                   >
-                    <Input
-                      placeholder="passenger name"
-                      style={{
-                        width: "60%",
-                      }}
-                    />
+                    <Form.Item
+                      {...field}
+                      style={{ width: "100%" }}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: `Phone num ${index + 1}`,
+                        },
+                      ]}
+                      noStyle
+                    >
+                      <Input
+                        placeholder={`Phone num ${index + 1}`}
+                        style={{ width: "90%", marginRight: 5 }}
+                      />
+                    </Form.Item>
+
+                    {fields.length > 1 ? (
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        style={{
+                          fontSize: 20,
+                          lineHeight: 1,
+                          marginTop: 3,
+                          marginLeft: 5,
+                        }}
+                        onClick={() => remove(field.name)}
+                      />
+                    ) : null}
                   </Form.Item>
-                  {fields.length > 1 ? (
-                    <AiOutlineMinusCircle
-                      className="dynamic-delete-button"
-                      onClick={() => remove(field.name)}
-                    />
-                  ) : null}
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: "60%" }}
+                    icon={<PlusOutlined />}
+                  >
+                    Add num
+                  </Button>
+                  <Form.ErrorList errors={errors} />
                 </Form.Item>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  style={{
-                    width: "60%",
-                  }}
-                  icon={<AiOutlinePlusCircle />}
-                >
-                  Add field
-                </Button>
-                <Form.ErrorList errors={errors} />
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
+              </>
+            )}
+          </Form.List>
+          <Button htmlType="submit">send</Button>
+        </Form>
       </PostProductModal>
     </>
   );

@@ -1,13 +1,37 @@
-import { Button, Row, Table, Tag, Col } from "antd";
-import React from "react";
+import { Button, Row, Table, Tag, Col, Modal } from "antd";
+import React, { useContext, useRef, useState } from "react";
+import { QueryContext } from "../../App";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
-import { useGetData } from "../../utils/hooks";
+import { useDeleteData, useGetData } from "../../utils/hooks";
 import InfoAdd from "./InfoAdd/InfoAdd";
 import InfoEdit from "./InfoEdit/InfoEdit";
+const { confirm } = Modal;
 
 const Info = () => {
   const infos = useGetData(["infos"], "/information");
   const item = infos?.data?.data?.[0];
+  const [modalOpen, setModalOpen] = useState(false);
+  const editRef = useRef(null);
+  const { queryClient } = useContext(QueryContext);
+
+  const delMut = useDeleteData("/information");
+  const delBtn = () => {
+    delMut.mutate(
+      {
+        id: item?.id,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["infos"] });
+        },
+      }
+    );
+  };
+
+  const editFormRes = () => {
+    editRef?.current?.resetFields();
+    setModalOpen(false);
+  };
   // console.log(item);
   const dataSource = [
     {
@@ -19,11 +43,24 @@ const Info = () => {
     },
   ];
 
-  if (infos?.data?.data.length >= 0) {
-    console.log(infos?.data?.data);
+  if (infos?.data?.data.length == 0) {
     return <InfoAdd />;
   }
-
+  const showConfirm = (id) => {
+    confirm({
+      title: "Are you sure you want to delete the information?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        delBtn();
+        queryClient.invalidateQueries({ queryKey: ["infos"] });
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
   return (
     <>
       <Table
@@ -35,18 +72,26 @@ const Info = () => {
             <>
               <Row justify="end">
                 <Col span={2}>
-                  <Button type="primary">Edit</Button>
+                  <Button type="primary" onClick={() => setModalOpen(true)}>
+                    Edit
+                  </Button>
                 </Col>
                 <Col span={2}>
-                  <Button danger>Delete</Button>
+                  <Button danger onClick={() => showConfirm()}>
+                    Delete
+                  </Button>
                 </Col>
               </Row>
             </>
           );
         }}
       />
-      <PostProductModal>
-        <InfoEdit />
+      <PostProductModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        resForm={editFormRes}
+      >
+        <InfoEdit editRef={editRef} setModalOpen={setModalOpen} infos={infos} />
       </PostProductModal>
     </>
   );
