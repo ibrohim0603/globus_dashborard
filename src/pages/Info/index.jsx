@@ -1,52 +1,97 @@
-import { Button, Row, Table, Tag, Col } from "antd";
-import React from "react";
-import PostProductModal from "../../components/postProductModal/PostProductModal";
+import { Table, Button } from "antd";
+import React, { useState, useRef } from "react";
 import { useGetData } from "../../utils/hooks";
-import InfoAdd from "./InfoAdd/InfoAdd";
-import InfoEdit from "./InfoEdit/InfoEdit";
+import PostProductModal from "../../components/postProductModal/PostProductModal";
+import styled from "styled-components";
+import AddInfoForm from "./addInfoForm/addInfoForm";
+import EditInfoForm from "./editInfoForm/addInfoForm";
+
+
+const Container = styled.div`
+  width: 100%;
+  padding-bottom: 30px;
+`;
+const Top = styled.div`
+  width: 100%;
+  height: 50px;
+  /* background-color: #f4f6f8; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+`;
+const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+`;
+
 
 const Info = () => {
   const infos = useGetData(["infos"], "/information");
+  // const infos = null
   const item = infos?.data?.data?.[0];
-  // console.log(item);
+
+  const [infoId, setInfoId] = useState()
+  const [modalOpen, setModalOpen] = useState(false);
+  const formRef = useRef(null);
+
+  const resForm = () => {
+    setModalOpen(false);
+    formRef.current.resetFields();
+  };
+
   const dataSource = [
     {
       email: item?.email,
-      tags: item?.phone,
+      tel: item?.phone[0],
+      phone: item?.phone[1],
       telegram: item?.telegram,
       instagram: item?.instagram,
       address: item?.address,
     },
   ];
 
-  if (infos?.data?.data.length >= 0) {
-    console.log(infos?.data?.data);
-    return <InfoAdd />;
+  const Buttons = () => {
+    if (infos?.data?.data.length >= 0) {
+      return <>
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => setModalOpen(true)}
+        >Edit</Button>
+        <Button size="large">Delete</Button>
+      </>
+    } else {
+      return <Button
+        type="primary"
+        size="large"
+        onClick={() => setModalOpen(true)}
+      >
+        Add Information
+      </Button>;
+    }
   }
 
   return (
     <>
-      <Table
-        pagination={false}
-        dataSource={dataSource}
-        columns={columns}
-        footer={(details) => {
-          return (
-            <>
-              <Row justify="end">
-                <Col span={2}>
-                  <Button type="primary">Edit</Button>
-                </Col>
-                <Col span={2}>
-                  <Button danger>Delete</Button>
-                </Col>
-              </Row>
-            </>
-          );
-        }}
-      />
-      <PostProductModal>
-        <InfoEdit />
+      <Container>
+        <Top>
+          <Buttons />
+        </Top>
+        <InfoWrapper>
+
+          <Table dataSource={dataSource} columns={columns} />
+        </InfoWrapper>
+      </Container>
+
+      <PostProductModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        resForm={resForm}
+      >
+        {infos?.data?.data.length >= 0 ? <EditInfoForm formRef={formRef} setModalOpen={setModalOpen} id={infoId} /> : <AddInfoForm formRef={formRef} setModalOpen={setModalOpen} />}
       </PostProductModal>
     </>
   );
@@ -77,18 +122,12 @@ const columns = [
   },
   {
     title: "Phone numbers",
-    dataIndex: "tags",
-    key: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags?.map((tag, i) => {
-          return (
-            <Tag color="green" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    colSpan: 2,
+    dataIndex: "tel",
+  },
+  {
+    title: "Phone",
+    colSpan: 0,
+    dataIndex: "phone",
   },
 ];

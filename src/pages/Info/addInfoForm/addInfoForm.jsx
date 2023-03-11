@@ -1,26 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Input, Form, Button } from "antd";
-import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { usePostData } from "../../../utils/hooks";
 import { QueryContext } from "../../../App";
 import './addInfoForm.sass'
 
 const AddInfoForm = ({ formRef, setModalOpen }) => {
-  const [photoId, setPhotoId] = useState(null);
   const { queryClient } = useContext(QueryContext);
   const postMutate = usePostData("/category");
 
   const onFinish = (values) => {
-    postMutate.mutate(
-      { ...values, photoId },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
-          formRef.current.resetFields();
-          setModalOpen(false);
-        },
-      }
-    );
+    console.log(values);
+    setModalOpen(false)
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -106,10 +97,17 @@ const AddInfoForm = ({ formRef, setModalOpen }) => {
 
               </Form.Item>
             ))}
-            <PlusCircleOutlined
-              className="dynamic-add-button"
-              onClick={() => add()}
-            />
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                style={{ width: '60%' }}
+                icon={<PlusOutlined />}
+              >
+                Add num
+              </Button>
+              <Form.ErrorList errors={errors} />
+            </Form.Item>
           </>
         )}
       </Form.List>
