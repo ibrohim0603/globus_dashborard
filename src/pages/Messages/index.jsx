@@ -1,12 +1,13 @@
 import { Button, Table, Modal, message } from "antd";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { QueryContext } from "../../App";
 import { useEditData, useGetData } from "../../utils/hooks";
 
 const Messages = () => {
   const messages = useGetData(["messages"], "/message");
   const { queryClient } = useContext(QueryContext);
-
+  const [num, setNum] = useState(null);
+  const [num2, setNum2] = useState(null);
   const messageMut = useEditData("/message");
 
   const { confirm } = Modal;
@@ -21,6 +22,12 @@ const Messages = () => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["messages"] });
           message.success(`This message was successfully rejected`);
+          setNum(null);
+        },
+        onError: () => {
+          message.error(
+            "This message was not successfully <rejected></rejected>"
+          );
         },
       }
     );
@@ -35,6 +42,10 @@ const Messages = () => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["messages"] });
           message.success(`This message was successfully resolved`);
+          setNum2(null);
+        },
+        onError: () => {
+          message.error("This message was not successfully resolved");
         },
       }
     );
@@ -51,14 +62,27 @@ const Messages = () => {
       status: d?.status,
       select: (
         <Button
-          onClick={() => readBtn(d?.id)}
+          disabled={messageMut.isLoading}
+          loading={num2 == i && messageMut.isLoading}
+          onClick={() => {
+            setNum2(i);
+            readBtn(d?.id);
+          }}
           style={{ color: "#005036", borderColor: "#005036" }}
         >
           Read
         </Button>
       ),
       del: (
-        <Button onClick={() => rejBtn(d?.id)} danger>
+        <Button
+          disabled={messageMut.isLoading}
+          loading={num == i && messageMut.isLoading}
+          onClick={() => {
+            setNum(i);
+            rejBtn(d?.id);
+          }}
+          danger
+        >
           Rejected
         </Button>
       ),
@@ -119,11 +143,11 @@ const columns = [
     dataIndex: "select",
     key: "select",
     colSpan: 2,
-    width: 90,
+    width: 105,
   },
   {
     title: "del",
-    width: 100,
+    width: 120,
     dataIndex: "del",
     key: "del",
     colSpan: 0,
