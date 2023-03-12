@@ -1,5 +1,7 @@
-import { Button, Row, Table, Tag, Col, Modal } from "antd";
+import { Button, Row, Tag, Col, Modal, Descriptions, message } from "antd";
 import React, { useContext, useRef, useState } from "react";
+import styled from "styled-components";
+// import parse from "html-react-parser";
 import { QueryContext } from "../../App";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import { useDeleteData, useGetData } from "../../utils/hooks";
@@ -7,12 +9,30 @@ import InfoAdd from "./InfoAdd/InfoAdd";
 import InfoEdit from "./InfoEdit/InfoEdit";
 const { confirm } = Modal;
 
+const Map = styled.div`
+  width: 100%;
+  min-height: 400px;
+  /* background-color: #123; */
+  iframe {
+    width: 100%;
+  }
+`;
+
 const Info = () => {
   const infos = useGetData(["infos"], "/information");
   const item = infos?.data?.data?.[0];
   const [modalOpen, setModalOpen] = useState(false);
   const editRef = useRef(null);
   const { queryClient } = useContext(QueryContext);
+  const parse = require("html-react-parser");
+
+  const telAddBtn = (add) => {
+    const phoneArr = editRef?.current?.getFieldValue("phone");
+
+    if (phoneArr.some((i) => !!i == false)) {
+      message.error("Bo'sh joyni to'ldiring");
+    } else add();
+  };
 
   const delMut = useDeleteData("/information");
   const delBtn = () => {
@@ -32,7 +52,7 @@ const Info = () => {
     editRef?.current?.resetFields();
     setModalOpen(false);
   };
-  // console.log(item);
+
   const dataSource = [
     {
       email: item?.email,
@@ -63,77 +83,74 @@ const Info = () => {
   };
   return (
     <>
-      <Table
-        pagination={false}
-        dataSource={dataSource}
-        columns={columns}
-        footer={(details) => {
-          return (
-            <>
-              <Row justify="end">
-                <Col span={2}>
-                  <Button type="primary" onClick={() => setModalOpen(true)}>
-                    Edit
-                  </Button>
-                </Col>
-                <Col span={2}>
-                  <Button danger onClick={() => showConfirm()}>
-                    Delete
-                  </Button>
-                </Col>
-              </Row>
-            </>
-          );
-        }}
-      />
       <PostProductModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         resForm={editFormRes}
       >
-        <InfoEdit editRef={editRef} setModalOpen={setModalOpen} infos={infos} />
+        <InfoEdit
+          editRef={editRef}
+          setModalOpen={setModalOpen}
+          infos={infos}
+          telAddBtn={telAddBtn}
+        />
       </PostProductModal>
+
+      {infos.isLoading ? (
+        "Loading"
+      ) : (
+        <Row gutter={[0, 15]} style={{ padding: 10 }}>
+          <Col span={24}>
+            <Descriptions title="Information" layout="vertical" bordered>
+              <Descriptions.Item label="Email" style={{ maxWidth: 100 }}>
+                {item?.email}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Telegram" style={{ maxWidth: 130 }}>
+                {item?.telegram}
+              </Descriptions.Item>
+              <Descriptions.Item label="Instagram" style={{ maxWidth: 130 }}>
+                {item?.instagram}
+              </Descriptions.Item>
+              <Descriptions.Item label="Telephone" span={3}>
+                <Row gutter={[5, 5]}>
+                  {item?.phone.map((p, i) => (
+                    <Col style={{ width: "max-content", cursor: "pointer" }}>
+                      <Tag color={i < 2 ? "geekblue" : "yellow"}>{p}</Tag>
+                    </Col>
+                  ))}
+                </Row>
+              </Descriptions.Item>
+              <Descriptions.Item label="Address">
+                {item?.address}
+              </Descriptions.Item>
+            </Descriptions>
+          </Col>
+          <Col span={24}>
+            <Map>{parse(item?.addressMap)}</Map>
+          </Col>
+        </Row>
+      )}
+
+      <Row justify="end" gutter={[15, 0]} style={{ padding: 10 }}>
+        <Col span={12}>
+          <Button
+            block
+            type="primary"
+            size="large"
+            onClick={() => setModalOpen(true)}
+          >
+            Edit
+          </Button>
+        </Col>
+        <Col span={12}>
+          <Button danger block size="large" onClick={() => showConfirm()}>
+            Delete
+          </Button>
+        </Col>
+      </Row>
     </>
   );
 };
 
 export default Info;
-
-const columns = [
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Telegram",
-    dataIndex: "telegram",
-    key: "telegram",
-  },
-  {
-    title: "Instagram",
-    dataIndex: "instagram",
-    key: "instagram",
-  },
-  {
-    title: "Phone numbers",
-    dataIndex: "tags",
-    key: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags?.map((tag, i) => {
-          return (
-            <Tag color="green" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-];

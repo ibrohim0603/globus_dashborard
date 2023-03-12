@@ -17,6 +17,14 @@ const InfoAdd = () => {
 
   const postMut = usePostData("/information");
 
+  const telAddBtn = (add) => {
+    const phoneArr = addRef?.current?.getFieldValue("phone");
+
+    if (phoneArr.some((i) => !!i == false)) {
+      message.error("Bo'sh joyni to'ldiring");
+    } else add();
+  };
+
   const addResForm = () => {
     setModalOpen(false);
     addRef.current.resetFields();
@@ -197,8 +205,8 @@ const InfoAdd = () => {
                 <Form.Item>
                   <Button
                     type="dashed"
-                    onClick={() => add()}
-                    style={{ width: "60%" }}
+                    onClick={() => telAddBtn(add)}
+                    style={{ width: "100%" }}
                     icon={<PlusOutlined />}
                   >
                     Add num
