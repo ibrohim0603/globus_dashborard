@@ -63,9 +63,6 @@ const Info = () => {
     },
   ];
 
-  if (infos?.data?.data.length == 0) {
-    return <InfoAdd />;
-  }
   const showConfirm = (id) => {
     confirm({
       title: "Are you sure you want to delete the information?",
@@ -81,76 +78,80 @@ const Info = () => {
       },
     });
   };
-  return (
-    <>
-      <PostProductModal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        resForm={editFormRes}
-      >
-        <InfoEdit
-          editRef={editRef}
+  if (infos?.data?.data.length == 0) {
+    return <InfoAdd />;
+  } else {
+    return (
+      <>
+        <PostProductModal
+          modalOpen={modalOpen}
           setModalOpen={setModalOpen}
-          infos={infos}
-          telAddBtn={telAddBtn}
-        />
-      </PostProductModal>
+          resForm={editFormRes}
+        >
+          <InfoEdit
+            editRef={editRef}
+            setModalOpen={setModalOpen}
+            infos={infos}
+            telAddBtn={telAddBtn}
+          />
+        </PostProductModal>
 
-      {infos.isLoading ? (
-        "Loading"
-      ) : (
-        <Row gutter={[0, 15]} style={{ padding: 10 }}>
-          <Col span={24}>
-            <Descriptions title="Information" layout="vertical" bordered>
-              <Descriptions.Item label="Email" style={{ maxWidth: 100 }}>
-                {item?.email}
-              </Descriptions.Item>
+        {infos.isLoading ? (
+          "Loading"
+        ) : (
+          <Row gutter={[0, 15]} style={{ padding: 10 }}>
+            <Col span={24}>
+              <Descriptions title="Information" layout="vertical" bordered>
+                <Descriptions.Item label="Email" style={{ maxWidth: 100 }}>
+                  {item?.email}
+                </Descriptions.Item>
 
-              <Descriptions.Item label="Telegram" style={{ maxWidth: 130 }}>
-                {item?.telegram}
-              </Descriptions.Item>
-              <Descriptions.Item label="Instagram" style={{ maxWidth: 130 }}>
-                {item?.instagram}
-              </Descriptions.Item>
-              <Descriptions.Item label="Telephone" span={3}>
-                <Row gutter={[5, 5]}>
-                  {item?.phone.map((p, i) => (
-                    <Col style={{ width: "max-content", cursor: "pointer" }}>
-                      <Tag color={i < 2 ? "geekblue" : "yellow"}>{p}</Tag>
-                    </Col>
-                  ))}
-                </Row>
-              </Descriptions.Item>
-              <Descriptions.Item label="Address">
-                {item?.address}
-              </Descriptions.Item>
-            </Descriptions>
+                <Descriptions.Item label="Telegram" style={{ maxWidth: 130 }}>
+                  {item?.telegram}
+                </Descriptions.Item>
+                <Descriptions.Item label="Instagram" style={{ maxWidth: 130 }}>
+                  {item?.instagram}
+                </Descriptions.Item>
+                <Descriptions.Item label="Telephone" span={3}>
+                  <Row gutter={[5, 5]}>
+                    {item?.phone.map((p, i) => (
+                      <Col style={{ width: "max-content", cursor: "pointer" }}>
+                        <Tag color={i < 2 ? "geekblue" : "yellow"}>{p}</Tag>
+                      </Col>
+                    ))}
+                  </Row>
+                </Descriptions.Item>
+                <Descriptions.Item label="Address">
+                  {item?.address}
+                </Descriptions.Item>
+              </Descriptions>
+            </Col>
+            <Col span={24}>
+              <Map>{parse(item?.addressMap)}</Map>
+            </Col>
+          </Row>
+        )}
+
+        <Row justify="end" gutter={[15, 0]} style={{ padding: 10 }}>
+          <Col span={12}>
+            <Button
+              block
+              type="primary"
+              size="large"
+              onClick={() => setModalOpen(true)}
+            >
+              Edit
+            </Button>
           </Col>
-          <Col span={24}>
-            <Map>{parse(item?.addressMap)}</Map>
+          <Col span={12}>
+            <Button danger block size="large" onClick={() => showConfirm()}>
+              Delete
+            </Button>
           </Col>
         </Row>
-      )}
-
-      <Row justify="end" gutter={[15, 0]} style={{ padding: 10 }}>
-        <Col span={12}>
-          <Button
-            block
-            type="primary"
-            size="large"
-            onClick={() => setModalOpen(true)}
-          >
-            Edit
-          </Button>
-        </Col>
-        <Col span={12}>
-          <Button danger block size="large" onClick={() => showConfirm()}>
-            Delete
-          </Button>
-        </Col>
-      </Row>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 export default Info;

@@ -19,8 +19,8 @@ const InfoAdd = () => {
 
   const telAddBtn = (add) => {
     const phoneArr = addRef?.current?.getFieldValue("phone");
-
-    if (phoneArr.some((i) => !!i == false)) {
+    console.log(phoneArr);
+    if (phoneArr?.some((i) => !!i == false)) {
       message.error("Bo'sh joyni to'ldiring");
     } else add();
   };
@@ -133,7 +133,7 @@ const InfoAdd = () => {
               },
             ]}
           >
-            <Input placeholder="Please input your address!" />
+            <Input placeholder="Please input your email!" />
           </Form.Item>
 
           <Form.Item
