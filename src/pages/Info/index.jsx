@@ -43,6 +43,9 @@ const Info = () => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["infos"] });
+          message.success(
+            "Information was successfully deleted! Refresh the page if the information is not deleted"
+          );
         },
       }
     );
