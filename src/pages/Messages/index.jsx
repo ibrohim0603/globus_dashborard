@@ -10,31 +10,7 @@ const Messages = () => {
   const messageMut = useEditData("/message");
 
   const { confirm } = Modal;
-  const showConfirm = (text, id) => {
-    confirm({
-      title: text,
-      okText: "Resolve",
-      // okType: "success",
-      cancelText: "Exit",
-      onOk() {
-        messageMut.mutate(
-          {
-            id,
-            value: { status: "RESOLVED" },
-          },
-          {
-            onSuccess: () => {
-              message.success(`This message was successfully resolved`);
-              queryClient.invalidateQueries({ queryKey: ["messages"] });
-            },
-          }
-        );
-      },
-      onCancel() {
-        console.log("Cancel");
-      },
-    });
-  };
+
   const rejBtn = (id) => {
     messageMut.mutate(
       {
@@ -49,6 +25,20 @@ const Messages = () => {
       }
     );
   };
+  const readBtn = (id) => {
+    messageMut.mutate(
+      {
+        id,
+        value: { status: "RESOLVED" },
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["messages"] });
+          message.success(`This message was successfully resolved`);
+        },
+      }
+    );
+  };
 
   const dataSource = messages?.data?.data.map((d, i) => {
     return {
@@ -56,13 +46,13 @@ const Messages = () => {
       time: d?.createdAt.slice(0, 10).replaceAll("-", "."),
       time2: d?.createdAt.slice(11, 16).replaceAll("-", "."),
       subject: d?.subject,
-      // message: d?.message,
+      message: d?.message,
       phone: d?.phone,
       status: d?.status,
       select: (
         <Button
-          onClick={() => showConfirm(d?.message, d?.id)}
-          style={{ color: "#005036" }}
+          onClick={() => readBtn(d?.id)}
+          style={{ color: "#005036", borderColor: "#005036" }}
         >
           Read
         </Button>
@@ -103,27 +93,37 @@ const columns = [
     title: "Subject",
     dataIndex: "subject",
     key: "subject",
+    ellipsis: true,
+    width: 150,
+  },
+  {
+    title: "Message",
+    dataIndex: "message",
+    key: "message",
+    ellipsis: true,
   },
   {
     title: "Phone number",
     dataIndex: "phone",
     key: "phone",
+    width: 130,
   },
   {
     title: "Status",
     dataIndex: "status",
     key: "status",
+    width: 100,
   },
   {
     title: "Select",
     dataIndex: "select",
     key: "select",
     colSpan: 2,
-    width: 50,
+    width: 90,
   },
   {
     title: "del",
-    width: 50,
+    width: 100,
     dataIndex: "del",
     key: "del",
     colSpan: 0,
