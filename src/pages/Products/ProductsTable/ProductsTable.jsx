@@ -50,7 +50,6 @@ const ProductsTable = ({ data }) => {
       { id },
       {
         onSuccess: () => {
-          // console.log("deleted");
           queryClient.invalidateQueries({ queryKey: ["products"] });
         },
       }
