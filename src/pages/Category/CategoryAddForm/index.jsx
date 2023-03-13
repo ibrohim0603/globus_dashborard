@@ -5,13 +5,13 @@ import { usePostData } from "../../../utils/hooks";
 import { QueryContext } from "../../../App";
 
 const CategoryAddForm = ({ formRef, setModalOpen }) => {
-  const [photoId, setPhotoId] = useState(null);
+  // const [photoId, setPhotoId] = useState(null);
   const { queryClient } = useContext(QueryContext);
   const postMutate = usePostData("/category");
 
   const onFinish = (values) => {
     postMutate.mutate(
-      { ...values, photoId },
+      { ...values, photoId: values?.photoId?.file?.response?.id },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -36,7 +36,7 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        setPhotoId(info.file.response.id);
+        // setPhotoId(info.file.response.id);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -49,7 +49,6 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
       name="basic"
       labelCol={{ span: 12 }}
       wrapperCol={{ span: 24 }}
-      style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -77,14 +76,19 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
         <Input placeholder="Name_En" />
       </Form.Item>
       <div style={{ display: "flex", gap: 20 }}>
-        <Upload {...props}>
-          <Button
-            style={{ display: "flex", alignItems: "center", gap: 10 }}
-            icon={<AiOutlineCloudUpload style={{ fontSize: 20 }} />}
-          >
-            Click to Upload
-          </Button>
-        </Upload>
+        <Form.Item
+          name="photoId"
+          rules={[{ required: true, message: "Please, upload photo" }]}
+        >
+          <Upload {...props}>
+            <Button
+              style={{ display: "flex", alignItems: "center", gap: 10 }}
+              icon={<AiOutlineCloudUpload style={{ fontSize: 20 }} />}
+            >
+              Click to Upload
+            </Button>
+          </Upload>
+        </Form.Item>
         <Button
           type="primary"
           htmlType="submit"

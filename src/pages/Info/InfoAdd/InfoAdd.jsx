@@ -41,8 +41,9 @@ const InfoAdd = () => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["infos"] });
-            addRef.current.resetFields();
             setModalOpen(false);
+            addRef.current.resetFields();
+            message.success(`Data added succesfully`);
           },
         }
       );

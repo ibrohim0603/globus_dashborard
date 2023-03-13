@@ -25,7 +25,8 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["infos"] });
-            // setModalOpen(false);
+            message.success("Information was successfully changed");
+            setModalOpen(false);
             // editRef.current.resetFields();
           },
         }

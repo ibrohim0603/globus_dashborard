@@ -56,7 +56,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        setPhotoId(info.file.response.id);
+        // setPhotoId(info.file.response.id);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -71,7 +71,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
   const onFinish = (values) => {
     console.log("Success:", {
       ...values,
-      photoId: photoId || defVals?.data?.photoId,
+      photoId: values?.photoId?.file?.response?.id || defVals?.data?.photoId,
     });
     editMutate.mutate(
       {
@@ -256,7 +256,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item name="photoId">
             <Upload {...props} style={{ width: "100%" }}>
               <Button
                 style={{ display: "flex", alignItems: "center", gap: 10 }}

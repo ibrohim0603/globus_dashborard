@@ -13,7 +13,7 @@ import { useGetData, usePostData } from "../../../utils/hooks";
 import { QueryContext } from "../../../App";
 
 const AddProductForm = ({ addRef, setModalOpen }) => {
-  const [photoId, setPhotoId] = useState(null);
+  // const [photoId, setPhotoId] = useState(null);
   const categs = useGetData(["categories"], "/category");
   const { queryClient } = useContext(QueryContext);
 
@@ -30,7 +30,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        setPhotoId(info.file.response.id);
+        // setPhotoId(info.file.response.id);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -46,7 +46,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
     postMutate.mutate(
       {
         ...values,
-        photoId,
+        photoId: values?.photoId?.file?.response?.id,
       },
       {
         onSuccess: (d) => {
