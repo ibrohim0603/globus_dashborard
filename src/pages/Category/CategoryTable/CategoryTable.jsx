@@ -52,7 +52,6 @@ const CategoryTable = ({ categories }) => {
       { id },
       {
         onSuccess: () => {
-          // console.log("success");
           queryClient.invalidateQueries({ queryKey: ["categories"] });
         },
       }
