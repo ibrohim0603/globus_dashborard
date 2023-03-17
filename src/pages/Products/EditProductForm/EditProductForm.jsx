@@ -76,7 +76,11 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
     editMutate.mutate(
       {
         id,
-        value: { ...values, photoId: photoId || defVals?.data?.photoId },
+        value: {
+          ...values,
+          photoId:
+            values?.photoId?.file?.response?.id || defVals?.data?.photoId,
+        },
       },
       {
         onSuccess: (d) => {

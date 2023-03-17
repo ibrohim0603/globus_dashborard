@@ -116,7 +116,7 @@ const Messages = () => {
       status: d?.status,
       select: (
         <Button
-          size={l == "uz" ? "small" : "middle"}
+          size={"small"}
           disabled={messageMut.isLoading}
           loading={num2 == i && messageMut.isLoading}
           onClick={() => {
@@ -130,7 +130,7 @@ const Messages = () => {
       ),
       del: (
         <Button
-          size={l == "uz" ? "small" : "middle"}
+          size={"small"}
           disabled={messageMut.isLoading}
           loading={num == i && messageMut.isLoading}
           onClick={() => {
