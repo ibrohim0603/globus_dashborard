@@ -3,14 +3,13 @@ import React, { useContext, useRef, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import { useEditData, usePostData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
+import { queryClient } from "../../../App";
+import { useTranslation } from "react-i18next";
 
 const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
   const data = infos?.data?.data[0];
-  const { queryClient } = useContext(QueryContext);
-
+  const { t } = useTranslation();
   const editMut = useEditData("/information");
-  console.log(editRef?.current);
 
   const onFinish = (values) => {
     console.log(values);
@@ -88,11 +87,13 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
             rules={[
               {
                 required: true,
-                message: "Please input your address!",
+                message: t("Please, input your ", { text: t("address") }),
               },
             ]}
           >
-            <Input placeholder="Please input your address!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("address") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -100,11 +101,17 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
             rules={[
               {
                 required: true,
-                message: "Please input your address map link!",
+                message: t("Please, input your ", {
+                  text: t("address map link"),
+                }),
               },
             ]}
           >
-            <Input placeholder="Please input your address map link!" />
+            <Input
+              placeholder={t("Please, input your ", {
+                text: t("address map link"),
+              })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -113,11 +120,13 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
               {
                 type: "email",
                 required: true,
-                message: "Please input your email!",
+                message: t("Please, input your ", { text: t("email") }),
               },
             ]}
           >
-            <Input placeholder="Please input your address!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("email") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -125,11 +134,13 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
             rules={[
               {
                 required: true,
-                message: "Please input your telegram!",
+                message: t("Please, input your ", { text: t("telegram") }),
               },
             ]}
           >
-            <Input placeholder="Please input your telegram!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("telegram") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -137,11 +148,13 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
             rules={[
               {
                 required: true,
-                message: "Please input your instagram!",
+                message: t("Please, input your ", { text: t("instagram") }),
               },
             ]}
           >
-            <Input placeholder="Please input your instagram!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("instagram") })}
+            />
           </Form.Item>
 
           <Form.List name="phone">
@@ -161,14 +174,16 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
                         {
                           required: true,
                           whitespace: true,
-                          message: `Phone num ${index + 1}`,
+                          message: t("Phone number") + " " + Number(index + 1),
                         },
                       ]}
                       noStyle
                     >
                       <Input
-                        placeholder={`Phone num ${index + 1}`}
-                        style={{ width: "92%", marginRight: 5 }}
+                        placeholder={
+                          t("Phone number") + " " + Number(index + 1)
+                        }
+                        style={{ width: "90%", marginRight: 5 }}
                       />
                     </Form.Item>
 
@@ -188,13 +203,12 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
                 ))}
                 <Form.Item>
                   <Button
-                    block
                     type="dashed"
                     onClick={() => telAddBtn(add)}
                     style={{ width: "100%" }}
                     icon={<PlusOutlined />}
                   >
-                    Add num
+                    {t("Add number")}
                   </Button>
                   <Form.ErrorList errors={errors} />
                 </Form.Item>

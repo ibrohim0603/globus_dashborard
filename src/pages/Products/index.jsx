@@ -6,6 +6,7 @@ import PostProductModal from "../../components/postProductModal/PostProductModal
 import PostForm from "../../components/postForm/postForm";
 import ProductsTable from "./ProductsTable/ProductsTable";
 import AddProductForm from "./AddProductForm/AddProductForm";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   width: 100%;
@@ -29,6 +30,7 @@ const ProductsWrapper = styled.div`
 const Products = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const addRef = useRef(null);
+  const { t } = useTranslation();
 
   const addFormRes = () => {
     setModalOpen(false);
@@ -49,7 +51,7 @@ const Products = () => {
               onClick={() => setModalOpen(true)}
               size="large"
             >
-              Create Product
+              {t("Add Product")}
             </Button>
           </Top>
 

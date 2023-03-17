@@ -1,8 +1,9 @@
 import { Button, Row, Tag, Col, Modal, Descriptions, message } from "antd";
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 // import parse from "html-react-parser";
-import { QueryContext } from "../../App";
+import { queryClient } from "../../App";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import { useDeleteData, useGetData } from "../../utils/hooks";
 import InfoAdd from "./InfoAdd/InfoAdd";
@@ -23,8 +24,8 @@ const Info = () => {
   const item = infos?.data?.data?.[0];
   const [modalOpen, setModalOpen] = useState(false);
   const editRef = useRef(null);
-  const { queryClient } = useContext(QueryContext);
   const parse = require("html-react-parser");
+  const { t } = useTranslation();
 
   const telAddBtn = (add) => {
     const phoneArr = editRef?.current?.getFieldValue("phone");
@@ -44,7 +45,9 @@ const Info = () => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["infos"] });
           message.success(
-            "Information was successfully deleted! Refresh the page if the information is not deleted"
+            t(
+              "Information was successfully deleted! Refresh the page if the information is not deleted"
+            )
           );
         },
       }
@@ -68,10 +71,10 @@ const Info = () => {
 
   const showConfirm = (id) => {
     confirm({
-      title: "Are you sure you want to delete the information?",
-      okText: "Yes",
+      title: t("Are you sure you want to delete the information?"),
+      okText: t("Yes"),
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("No"),
       onOk() {
         delBtn();
         queryClient.invalidateQueries({ queryKey: ["infos"] });
@@ -104,18 +107,24 @@ const Info = () => {
         ) : (
           <Row gutter={[0, 15]} style={{ padding: 10 }}>
             <Col span={24}>
-              <Descriptions title="Information" layout="vertical" bordered>
-                <Descriptions.Item label="Email" style={{ maxWidth: 100 }}>
+              <Descriptions title={t("Information")} layout="vertical" bordered>
+                <Descriptions.Item label={t("Email")} style={{ maxWidth: 100 }}>
                   {item?.email}
                 </Descriptions.Item>
 
-                <Descriptions.Item label="Telegram" style={{ maxWidth: 130 }}>
+                <Descriptions.Item
+                  label={t("Telegram")}
+                  style={{ maxWidth: 130 }}
+                >
                   {item?.telegram}
                 </Descriptions.Item>
-                <Descriptions.Item label="Instagram" style={{ maxWidth: 130 }}>
+                <Descriptions.Item
+                  label={t("Instagram")}
+                  style={{ maxWidth: 130 }}
+                >
                   {item?.instagram}
                 </Descriptions.Item>
-                <Descriptions.Item label="Telephone" span={3}>
+                <Descriptions.Item label={t("Phone number")} span={3}>
                   <Row gutter={[5, 5]}>
                     {item?.phone.map((p, i) => (
                       <Col style={{ width: "max-content", cursor: "pointer" }}>
@@ -124,7 +133,7 @@ const Info = () => {
                     ))}
                   </Row>
                 </Descriptions.Item>
-                <Descriptions.Item label="Address">
+                <Descriptions.Item label={t("Address")}>
                   {item?.address}
                 </Descriptions.Item>
               </Descriptions>
@@ -143,12 +152,12 @@ const Info = () => {
               size="large"
               onClick={() => setModalOpen(true)}
             >
-              Edit
+              {t("Edit")}
             </Button>
           </Col>
           <Col span={12}>
             <Button danger block size="large" onClick={() => showConfirm()}>
-              Delete
+              {t("Delete")}
             </Button>
           </Col>
         </Row>

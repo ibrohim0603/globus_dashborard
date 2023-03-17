@@ -5,7 +5,8 @@ import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import EditProductForm from "../EditProductForm/EditProductForm";
 import { useDeleteData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
+import { queryClient } from "../../../App";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   /* overflow-x: scroll; */
@@ -41,7 +42,87 @@ const ProductsTable = ({ data }) => {
   const editRef = useRef(null);
   const [id, setId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const { queryClient } = useContext(QueryContext);
+
+  const { t } = useTranslation();
+
+  const columns = [
+    {
+      title: t("Name", { text: "_Uz" }),
+      dataIndex: "name_Uz",
+      key: "name_Uz",
+    },
+    {
+      title: t("Name", { text: "_Ru" }),
+      dataIndex: "name_Ru",
+      key: "name_Ru",
+    },
+    {
+      title: t("Name", { text: "_En" }),
+      dataIndex: "name_En",
+      key: "name_En",
+    },
+    {
+      title: t("Price"),
+      dataIndex: "price",
+      key: "price",
+      sorter: true,
+    },
+    {
+      title: t("Discount"),
+      dataIndex: "discount",
+      key: "discount",
+      sorter: true,
+    },
+    {
+      title: t("Photo"),
+      dataIndex: "photo",
+      key: "photo",
+      ellipsis: true,
+    },
+    {
+      title: t("Description", { text: "_Uz" }),
+      dataIndex: "description_Uz",
+      key: "description_Uz",
+      ellipsis: true,
+    },
+    {
+      title: t("Description", { text: "_Ru" }),
+      dataIndex: "description_Ru",
+      ellipsis: true,
+      key: "description_Ru",
+    },
+    {
+      title: t("Description", { text: "_En" }),
+      dataIndex: "description_En",
+      ellipsis: true,
+      key: "description_En",
+    },
+    {
+      title: t("Category", { text: "_Uz" }),
+      dataIndex: "category_Uz",
+      key: "category_Uz",
+      ellipsis: true,
+    },
+    {
+      title: t("Category", { text: "_Ru" }),
+      dataIndex: "category_Ru",
+      key: "category_Ru",
+      ellipsis: true,
+    },
+    {
+      ellipsis: true,
+      title: t("Category", { text: "_En" }),
+      dataIndex: "category_En",
+      key: "category_En",
+    },
+    {
+      title: t("Control"),
+      dataIndex: "btns",
+      key: "btns",
+      fixed: "right",
+      width: 105,
+    },
+  ];
 
   const delMut = useDeleteData("/products");
 
@@ -59,12 +140,12 @@ const ProductsTable = ({ data }) => {
   const { confirm } = Modal;
   const showConfirm = (id) => {
     confirm({
-      title: "Are you sure you want to delete the product?",
+      title: t("Are you sure you want to delete the product?"),
       // icon: <ExclamationCircleFilled />,
       // content: "Some descriptions",
-      okText: "Yes",
+      okText: t("Yes"),
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("No"),
       onOk() {
         delBtn(id);
         queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -139,82 +220,3 @@ const ProductsTable = ({ data }) => {
 };
 
 export default ProductsTable;
-
-const columns = [
-  {
-    title: "Name_Uz",
-    dataIndex: "name_Uz",
-    key: "name_Uz",
-  },
-  {
-    title: "Name_Ru",
-    dataIndex: "name_Ru",
-    key: "name_Ru",
-  },
-  {
-    title: "Name_En",
-    dataIndex: "name_En",
-    key: "name_En",
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-    sorter: true,
-  },
-  {
-    title: "Discount",
-    dataIndex: "discount",
-    key: "discount",
-    sorter: true,
-  },
-  {
-    title: "Photo",
-    dataIndex: "photo",
-    key: "photo",
-    ellipsis: true,
-  },
-  {
-    title: "Description_Uz",
-    dataIndex: "description_Uz",
-    key: "description_Uz",
-    ellipsis: true,
-  },
-  {
-    title: "Description_Ru",
-    dataIndex: "description_Ru",
-    ellipsis: true,
-    key: "description_Ru",
-  },
-  {
-    title: "Description_En",
-    dataIndex: "description_En",
-    ellipsis: true,
-    key: "description_En",
-  },
-  {
-    title: "Category_Uz",
-    dataIndex: "category_Uz",
-    key: "category_Uz",
-    ellipsis: true,
-  },
-  {
-    title: "Category_Ru",
-    dataIndex: "category_Ru",
-    key: "category_Ru",
-    ellipsis: true,
-  },
-  {
-    ellipsis: true,
-    title: "Category_En",
-    dataIndex: "category_En",
-    key: "category_En",
-  },
-  {
-    title: "Action",
-    dataIndex: "btns",
-    key: "btns",
-    fixed: "right",
-    width: 100,
-  },
-];

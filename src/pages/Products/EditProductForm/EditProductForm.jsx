@@ -10,14 +10,14 @@ import {
   Upload,
 } from "antd";
 import { useEditData, useGetData, usePostData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
-import { RiNeteaseCloudMusicFill } from "react-icons/ri";
+import { queryClient } from "../../../App";
+import { useTranslation } from "react-i18next";
 
 const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
   const [photoId, setPhotoId] = useState(null);
-  const { queryClient } = useContext(QueryContext);
   const [fields, setFields] = useState(null);
-  // console.log(fields);
+  const { t } = useTranslation();
+
   const defVals = useGetData(["products", id], `/products/${id}`, {
     onSuccess: (d) => {
       setFields(
@@ -57,7 +57,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
       }
       if (info.file.status === "done") {
         // setPhotoId(info.file.response.id);
-        message.success(`${info.file.name} file uploaded successfully`);
+        message.success(info.file.name + " " + t("file uploaded successfully"));
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
@@ -91,11 +91,24 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
     console.log("Failed:", errorInfo);
   };
 
+  const l = localStorage.getItem("lang") || "en";
   const options = categs?.data?.data.map((d) => {
-    return {
-      value: d?.id,
-      label: d?.name_Uz,
-    };
+    if (l == "uz") {
+      return {
+        value: d?.id,
+        label: d?.name_Uz,
+      };
+    } else if (l == "ru") {
+      return {
+        value: d?.id,
+        label: d?.name_Ru,
+      };
+    } else {
+      return {
+        value: d?.id,
+        label: d?.name_En,
+      };
+    }
   });
 
   return (
@@ -127,71 +140,131 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
         >
           <Form.Item
             name="name_Uz"
-            rules={[{ required: true, message: "Please, write name_Uz" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_Uz" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="name_Uz" />
+            <Input placeholder={t("Name", { text: "_Uz" })} />
           </Form.Item>
           <Form.Item
             name="name_Ru"
-            rules={[{ required: true, message: "Please, write name_Ru" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_Ru" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="name_Ru" />
+            <Input placeholder={t("Name", { text: "_Ru" })} />
           </Form.Item>
           <Form.Item
             name="name_En"
-            rules={[{ required: true, message: "Please, write name_En" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_En" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="name_En" />
+            <Input placeholder={t("Name", { text: "_En" })} />
           </Form.Item>
           <Form.Item
             name="description_Uz"
             rules={[
-              { required: true, message: "Please, write description_Uz" },
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Description", { text: "_Uz" }),
+                }),
+              },
             ]}
           >
-            <Input.TextArea placeholder="description_Uz" />
+            <Input.TextArea placeholder={t("Description", { text: "_Uz" })} />
           </Form.Item>
           <Form.Item
             name="description_Ru"
             rules={[
-              { required: true, message: "Please, write description_Ru" },
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Description", { text: "_Ru" }),
+                }),
+              },
             ]}
           >
-            <Input.TextArea placeholder="description_Ru" />
+            <Input.TextArea placeholder={t("Description", { text: "_Ru" })} />
           </Form.Item>
           <Form.Item
             name="description_En"
             rules={[
-              { required: true, message: "Please, write description_En" },
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Description", { text: "_En" }),
+                }),
+              },
             ]}
           >
-            <Input.TextArea placeholder="description_En" />
+            <Input.TextArea placeholder={t("Description", { text: "_En" })} />
           </Form.Item>
           <Form.Item
             name="type"
-            rules={[{ required: true, message: "Please, write type" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", { text: t("type") }),
+              },
+            ]}
           >
-            <Input placeholder="type" />
+            <Input placeholder={t("type")} />
           </Form.Item>
           <Form.Item
             name="size"
-            rules={[{ required: true, message: "Please, write size" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", { text: t("size") }),
+              },
+            ]}
           >
-            <Input placeholder="size" size="middle" style={{ width: "100%" }} />
+            <Input
+              placeholder={t("size")}
+              size="middle"
+              style={{ width: "100%" }}
+            />
           </Form.Item>
           <Form.Item
             name="color"
-            rules={[{ required: true, message: "Please, write color" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", { text: t("color") }),
+              },
+            ]}
           >
-            <Input placeholder="color" />
+            <Input placeholder={t("color")} />
           </Form.Item>
 
           <Form.Item
             name="discount"
-            rules={[{ required: true, message: "Please, write discount" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", { text: t("discount") }),
+              },
+            ]}
           >
             <InputNumber
-              placeholder="discount"
+              placeholder={t("discount")}
               size="middle"
               style={{ width: "100%" }}
               min={0}
@@ -201,10 +274,15 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
 
           <Form.Item
             name="price"
-            rules={[{ required: true, message: "Please, write price" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", { text: t("price") }),
+              },
+            ]}
           >
             <InputNumber
-              placeholder="price"
+              placeholder={t("price")}
               size="middle"
               style={{ width: "100%" }}
               min={0}
@@ -214,59 +292,77 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
 
           <Form.Item
             name="categoryId"
-            rules={[{ required: true, message: "Please, select a category" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, select a ", { text: t("category") }),
+              },
+            ]}
           >
             <Select
               style={{
                 width: "100%",
               }}
-              placeholder="Select a category"
+              placeholder={t("Please, select a ", { text: t("category") })}
               options={options}
             />
           </Form.Item>
           <Form.Item
             name="active"
-            rules={[{ required: true, message: "Please, select a condition" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, select a ", { text: t("status") }),
+              },
+            ]}
           >
             <Select
               style={{
                 width: "100%",
               }}
-              placeholder="Please, select a condition"
+              placeholder={t("Please, select a ", { text: t("status") })}
               options={[
-                { value: true, label: "Active" },
-                { value: false, label: "Non-active" },
+                { value: true, label: t("Active") },
+                { value: false, label: t("Not active") },
               ]}
             />
           </Form.Item>
           <Form.Item
             name="gender"
-            rules={[{ required: true, message: "Please, select a gender" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, select a ", { text: t("gender") }),
+              },
+            ]}
           >
             <Select
               style={{
                 width: "100%",
               }}
-              placeholder="Please, select a gender"
+              placeholder={t("Please, select a ", { text: t("gender") })}
               options={[
-                { value: "MALE", label: "Male" },
-                { value: "FEMALE", label: "Female" },
-                { value: "BOTH", label: "Both" },
+                { value: "MALE", label: t("Male") },
+                { value: "FEMALE", label: t("Female") },
+                { value: "BOTH", label: t("Both") },
               ]}
             />
           </Form.Item>
 
-          <Form.Item name="photoId">
+          <Form.Item
+            name="photoId"
+            // rules={[{ required: true, message: t("Please, upload photo") }]}
+          >
             <Upload {...props} style={{ width: "100%" }}>
               <Button
                 style={{ display: "flex", alignItems: "center", gap: 10 }}
                 icon={<AiOutlineCloudUpload style={{ fontSize: 20 }} />}
               >
-                Click to Upload
+                {t("Click to Upload")}
               </Button>
             </Upload>
           </Form.Item>
-          <Button htmlType="submit">Send</Button>
+          <Button htmlType="submit">{t("Send")}</Button>
         </Form>
       )}
     </>

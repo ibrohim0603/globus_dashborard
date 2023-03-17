@@ -8,6 +8,20 @@ const Container = styled.div`
   margin: 0 auto;
   display: flex;
   position: relative;
+  * {
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 80, 54, 0.7);
+      border-radius: 5px;
+    }
+  }
 `;
 
 const Left = styled.div`
