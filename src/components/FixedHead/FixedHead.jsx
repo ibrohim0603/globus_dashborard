@@ -3,7 +3,11 @@ import styled from "styled-components";
 import { Admin } from "../../utils/context/AdminContext";
 import { RiAdminLine } from "react-icons/ri";
 import { AiOutlineSetting, AiOutlineLogout } from "react-icons/ai";
-import { Dropdown } from "antd";
+import { Dropdown, Select } from "antd";
+import { useLang } from "../../utils/state";
+import i18next from "i18next";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   padding: 10px;
@@ -11,6 +15,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 15px;
+  .fi {
+    filter: drop-shadow(0 0 1px #000);
+  }
 `;
 const UserData = styled.div`
   display: flex;
@@ -45,31 +53,61 @@ const BtnItem = styled.div`
 
 const FixedHead = () => {
   const { admin } = useContext(Admin);
+  const setLang = useLang((s) => s.setLang);
+
+  const { t } = useTranslation();
 
   const items = [
     {
       label: (
         <BtnItem>
-          <AiOutlineSetting />
-          <span>Settings</span>
+          <AiOutlineLogout />
+          <span>{t("Sign out")}</span>
         </BtnItem>
       ),
       key: "0",
-    },
-    {
-      label: (
-        <BtnItem>
-          <AiOutlineLogout />
-          <span>Sign out</span>
-        </BtnItem>
-      ),
-      key: "1",
       // onClick: () => console.log("work"),
     },
   ];
 
+  const handleChange = (l) => {
+    i18next.changeLanguage(l);
+    localStorage.setItem("lang", l);
+  };
+
   return (
     <Container>
+      <Select
+        defaultValue={localStorage.getItem("lang") || "en"}
+        style={{ width: "max-content" }}
+        onChange={handleChange}
+        options={[
+          {
+            value: "uz",
+            label: (
+              <span>
+                <span className="fi fi-uz"></span>
+              </span>
+            ),
+          },
+          {
+            value: "en",
+            label: (
+              <span>
+                <span className="fi fi-gb"></span>
+              </span>
+            ),
+          },
+          {
+            value: "ru",
+            label: (
+              <span>
+                <span className="fi fi-ru"></span>
+              </span>
+            ),
+          },
+        ]}
+      />
       <UserData>
         <UserName>{admin.firstname + " " + admin.lastname}</UserName>
         <Dropdown menu={{ items }} trigger={["click"]}>

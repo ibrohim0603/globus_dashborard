@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { Input, Form, Button, Upload, message } from "antd";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useEditData, useGetData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
+import { queryClient } from "../../../App";
+import { useTranslation } from "react-i18next";
 
 // import CategoryEdit from "../CategoryEdit/CategoryEdit";
 
 const CategoryEdit = ({ editRef, id, setModalOpen }) => {
-  // const [photoId, setPhotoId] = useState(null);
-  const { queryClient } = useContext(QueryContext);
+  const { t } = useTranslation();
+
   const editMutate = useEditData("/category");
 
   const getFields = useGetData(["categories", id], `/category/${id}`);
@@ -87,32 +88,56 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
           <Form.Item
             // label="Name_Uz"
             name="name_Uz"
-            rules={[{ required: true, message: "Please input your Name_Uz!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_Uz" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="Name_Uz" />
+            <Input placeholder={t("Name", { text: "_Uz" })} />
           </Form.Item>
 
           <Form.Item
             // label="Name_Ru"
             name="name_Ru"
-            rules={[{ required: true, message: "Please input your Name_Ru!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_Ru" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="Name_Ru" />
+            <Input placeholder={t("Name", { text: "_Ru" })} />
           </Form.Item>
           <Form.Item
             name="name_En"
-            rules={[{ required: true, message: "Please input your Name_En!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("Please, write ", {
+                  text: t("Name", { text: "_En" }),
+                }),
+              },
+            ]}
           >
-            <Input placeholder="Name_En" />
+            <Input placeholder={t("Name", { text: "_En" })} />
           </Form.Item>
           <div style={{ display: "flex", gap: 20 }}>
-            <Form.Item name="photoId">
+            <Form.Item
+              name="photoId"
+              // rules={[{ required: true, message: t("Please, upload photo") }]}
+            >
               <Upload {...props}>
                 <Button
                   style={{ display: "flex", alignItems: "center", gap: 10 }}
                   icon={<AiOutlineCloudUpload style={{ fontSize: 20 }} />}
                 >
-                  Click to Upload
+                  {t("Click to Upload")}
                 </Button>
               </Upload>
             </Form.Item>
@@ -121,7 +146,7 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
               htmlType="submit"
               disabled={editMutate.isLoading}
             >
-              Send
+              {t("Send")}
             </Button>
           </div>
         </Form>

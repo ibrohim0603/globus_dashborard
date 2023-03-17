@@ -5,6 +5,7 @@ import { useGetData } from "../../utils/hooks";
 import CategoryTable from "./CategoryTable/CategoryTable";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import CategoryAddForm from "./CategoryAddForm";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   width: 100%;
@@ -30,6 +31,7 @@ const Category = () => {
 
   const categories = useGetData(["categories"], `/category`);
   const formRef = useRef(null);
+  const { t } = useTranslation();
 
   const resForm = () => {
     setModalOpen(false);
@@ -45,7 +47,7 @@ const Category = () => {
             onClick={() => setModalOpen(true)}
             size="large"
           >
-            Add Category
+            {t("Add Category")}
           </Button>
         </Top>
         <CategoryWrapper>

@@ -3,9 +3,10 @@ import { Table, Button, Modal } from "antd";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import { useDeleteData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
+import { queryClient, QueryContext } from "../../../App";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import CategoryEdit from "../CategoryEdit/CategoryEdit";
+import { useTranslation } from "react-i18next";
 
 const BtnWrap = styled.div`
   display: flex;
@@ -38,7 +39,7 @@ const CategoryTable = ({ categories }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const { data } = categories?.data;
   const delMut = useDeleteData(`/category`);
-  const { queryClient } = useContext(QueryContext);
+  const { t } = useTranslation();
   const editRef = useRef(null);
   const [idx, setIdx] = useState(null);
 
@@ -61,12 +62,10 @@ const CategoryTable = ({ categories }) => {
   const { confirm } = Modal;
   const showConfirm = (id) => {
     confirm({
-      title: "Are you sure you want to delete the category?",
-      okText: "Yes",
+      title: t("Are you sure you want to delete the category?"),
+      okText: t("Yes"),
       okType: "danger",
-      cancelText: "No",
-      // icon: <ExclamationCircleFilled />,
-      // content: "Some descriptions",
+      cancelText: t("No"),
       onOk() {
         delBtn(id);
         queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -107,6 +106,36 @@ const CategoryTable = ({ categories }) => {
     };
   });
 
+  const columns = [
+    {
+      title: t("Name", { text: "_Uz" }),
+      dataIndex: "name_Uz",
+      key: "name_Uz",
+    },
+    {
+      title: t("Name", { text: "_Ru" }),
+      dataIndex: "name_Ru",
+      key: "name_Ru",
+    },
+    {
+      title: t("Name", { text: "_En" }),
+      dataIndex: "name_En",
+      key: "name_En",
+    },
+    {
+      title: t("Photo"),
+      dataIndex: "photo",
+      key: "photo",
+    },
+    {
+      title: t("Control"),
+      dataIndex: "btns",
+      key: "btns",
+      fixed: true,
+      width: 100,
+    },
+  ];
+
   return (
     <>
       <Table columns={columns} dataSource={dataSource} />
@@ -122,33 +151,3 @@ const CategoryTable = ({ categories }) => {
 };
 
 export default CategoryTable;
-
-const columns = [
-  {
-    title: "Name_Uz",
-    dataIndex: "name_Uz",
-    key: "name_Uz",
-  },
-  {
-    title: "Name_Ru",
-    dataIndex: "name_Ru",
-    key: "name_Ru",
-  },
-  {
-    title: "Name_En",
-    dataIndex: "name_En",
-    key: "name_En",
-  },
-  {
-    title: "Photo",
-    dataIndex: "photo",
-    key: "photo",
-  },
-  {
-    title: "Action",
-    dataIndex: "btns",
-    key: "btns",
-    fixed: true,
-    width: 100,
-  },
-];

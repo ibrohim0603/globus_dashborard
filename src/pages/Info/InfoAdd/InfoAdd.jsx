@@ -8,18 +8,19 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import { usePostData } from "../../../utils/hooks";
-import { QueryContext } from "../../../App";
+import { queryClient } from "../../../App";
+import { useTranslation } from "react-i18next";
 
 const InfoAdd = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const addRef = useRef(null);
-  const { queryClient } = useContext(QueryContext);
 
   const postMut = usePostData("/information");
+  const { t } = useTranslation();
 
   const telAddBtn = (add) => {
     const phoneArr = addRef?.current?.getFieldValue("phone");
-    console.log(phoneArr);
+
     if (phoneArr?.some((i) => !!i == false)) {
       message.error("Bo'sh joyni to'ldiring");
     } else add();
@@ -70,7 +71,7 @@ const InfoAdd = () => {
             }}
           >
             <AiOutlinePlus />
-            Add
+            {t("Add")}
           </Button>
         </Col>
       </Row>
@@ -105,11 +106,13 @@ const InfoAdd = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your address!",
+                message: t("Please, input your ", { text: t("address") }),
               },
             ]}
           >
-            <Input placeholder="Please input your address!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("address") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -117,11 +120,17 @@ const InfoAdd = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your address map link!",
+                message: t("Please, input your ", {
+                  text: t("address map link"),
+                }),
               },
             ]}
           >
-            <Input placeholder="Please input your address map link!" />
+            <Input
+              placeholder={t("Please, input your ", {
+                text: t("address map link"),
+              })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -130,11 +139,13 @@ const InfoAdd = () => {
               {
                 type: "email",
                 required: true,
-                message: "Please input your email!",
+                message: t("Please, input your ", { text: t("email") }),
               },
             ]}
           >
-            <Input placeholder="Please input your email!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("email") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -142,11 +153,13 @@ const InfoAdd = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your telegram!",
+                message: t("Please, input your ", { text: t("telegram") }),
               },
             ]}
           >
-            <Input placeholder="Please input your telegram!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("telegram") })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -154,11 +167,13 @@ const InfoAdd = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your instagram!",
+                message: t("Please, input your ", { text: t("instagram") }),
               },
             ]}
           >
-            <Input placeholder="Please input your instagram!" />
+            <Input
+              placeholder={t("Please, input your ", { text: t("instagram") })}
+            />
           </Form.Item>
 
           <Form.List name="phone">
@@ -178,13 +193,15 @@ const InfoAdd = () => {
                         {
                           required: true,
                           whitespace: true,
-                          message: `Phone num ${index + 1}`,
+                          message: t("Phone number") + " " + Number(index + 1),
                         },
                       ]}
                       noStyle
                     >
                       <Input
-                        placeholder={`Phone num ${index + 1}`}
+                        placeholder={
+                          t("Phone number") + " " + Number(index + 1)
+                        }
                         style={{ width: "90%", marginRight: 5 }}
                       />
                     </Form.Item>
@@ -210,14 +227,14 @@ const InfoAdd = () => {
                     style={{ width: "100%" }}
                     icon={<PlusOutlined />}
                   >
-                    Add num
+                    {t("Add number")}
                   </Button>
                   <Form.ErrorList errors={errors} />
                 </Form.Item>
               </>
             )}
           </Form.List>
-          <Button htmlType="submit">send</Button>
+          <Button htmlType="submit">{t("Send")}</Button>
         </Form>
       </PostProductModal>
     </>

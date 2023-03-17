@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { sidebarlinks } from "./sidebarlinks";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   width: 100%;
@@ -20,7 +21,7 @@ const LinksWrapper = styled.div`
   padding: 20px 10px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 7px;
 `;
 const SidebarLink = styled(NavLink)`
   width: 100%;
@@ -52,6 +53,7 @@ const Name = styled.div`
 `;
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   return (
     <Container>
       <Logo to="/">Logo</Logo>
@@ -59,7 +61,7 @@ const Sidebar = () => {
         {sidebarlinks.map((s, i) => (
           <SidebarLink to={s.link} key={i}>
             <Icon>{s.icon}</Icon>
-            <Name>{s.name}</Name>
+            <Name>{t(s.name)}</Name>
           </SidebarLink>
         ))}
       </LinksWrapper>
