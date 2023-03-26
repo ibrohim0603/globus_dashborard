@@ -8,7 +8,7 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import { usePostData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
 
 const InfoAdd = () => {
@@ -41,7 +41,7 @@ const InfoAdd = () => {
         },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["infos"] });
+            queryClient.invalidateQueries("infos");
             setModalOpen(false);
             addRef.current.resetFields();
             message.success(`Data added succesfully`);

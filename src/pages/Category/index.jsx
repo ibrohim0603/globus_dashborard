@@ -6,6 +6,7 @@ import CategoryTable from "./CategoryTable/CategoryTable";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import CategoryAddForm from "./CategoryAddForm";
 import { useTranslation } from "react-i18next";
+import Loader from "../../components/Loader/Loader";
 
 const Container = styled.div`
   width: 100%;
@@ -52,7 +53,7 @@ const Category = () => {
         </Top>
         <CategoryWrapper>
           {categories?.isLoading ? (
-            "Loading"
+            <Loader />
           ) : (
             <CategoryTable
               categories={categories}

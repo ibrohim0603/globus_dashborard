@@ -3,10 +3,11 @@ import { Table, Button, Modal } from "antd";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import { useDeleteData } from "../../../utils/hooks";
-import { queryClient, QueryContext } from "../../../App";
+import { queryClient, QueryContext } from "../../../";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import CategoryEdit from "../CategoryEdit/CategoryEdit";
 import { useTranslation } from "react-i18next";
+import { instanceImg } from "../../../utils/axios";
 
 const BtnWrap = styled.div`
   display: flex;
@@ -53,7 +54,7 @@ const CategoryTable = ({ categories }) => {
       { id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          queryClient.invalidateQueries("categories");
         },
       }
     );
@@ -68,10 +69,7 @@ const CategoryTable = ({ categories }) => {
       cancelText: t("No"),
       onOk() {
         delBtn(id);
-        queryClient.invalidateQueries({ queryKey: ["categories"] });
-      },
-      onCancel() {
-        console.log("Cancel");
+        queryClient.invalidateQueries("categories");
       },
     });
   };
@@ -82,12 +80,7 @@ const CategoryTable = ({ categories }) => {
       name_Uz: d.name_Uz,
       name_Ru: d.name_Ru,
       name_En: d.name_En,
-      photo: (
-        <img
-          style={{ width: 40 }}
-          src={`http://3.19.30.204/upload/${d.photo.path}`}
-        />
-      ),
+      photo: <img style={{ width: 40 }} src={instanceImg + d?.photo.path} />,
       btns: (
         <BtnWrap>
           <EditBtn

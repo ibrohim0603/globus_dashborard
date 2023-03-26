@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Input, Form, Button, Upload, message } from "antd";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useEditData, useGetData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
-
-// import CategoryEdit from "../CategoryEdit/CategoryEdit";
+import { instanceUpload } from "../../../utils/axios";
+import Loader from "../../../components/Loader/Loader";
 
 const CategoryEdit = ({ editRef, id, setModalOpen }) => {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
   const { data } = getFields;
 
   const onFinish = (values) => {
-    queryClient.invalidateQueries({ queryKey: ["categories", id] });
+    queryClient.invalidateQueries("categories");
     editMutate.mutate(
       {
         value: {
@@ -28,7 +28,7 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
       {
         onSuccess: () => {
           setModalOpen(false);
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          queryClient.invalidateQueries("categories");
           editRef.current.resetFields();
         },
       }
@@ -40,7 +40,7 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
   };
   const props = {
     name: "photo",
-    action: "http://3.19.30.204/upload/upload",
+    action: instanceUpload,
     headers: {
       authorization: "authorization-text",
     },
@@ -49,7 +49,6 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        // setPhotoId(info.file.response.id);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -59,7 +58,7 @@ const CategoryEdit = ({ editRef, id, setModalOpen }) => {
   return (
     <>
       {editMutate.isLoading ? (
-        "Loading"
+        <Loader />
       ) : (
         <Form
           ref={editRef}

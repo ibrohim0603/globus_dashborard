@@ -3,15 +3,24 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import AdminContextProvider from "./utils/context/AdminContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <BrowserRouter>
-    <AdminContextProvider>
+
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
       <App />
-    </AdminContextProvider>
-  </BrowserRouter>
+    </BrowserRouter>
+  </QueryClientProvider>
   // </React.StrictMode>
 );

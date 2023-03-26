@@ -7,6 +7,7 @@ import PostForm from "../../components/postForm/postForm";
 import ProductsTable from "./ProductsTable/ProductsTable";
 import AddProductForm from "./AddProductForm/AddProductForm";
 import { useTranslation } from "react-i18next";
+import Loader from "../../components/Loader/Loader";
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +27,12 @@ const ProductsWrapper = styled.div`
   gap: 10px;
   margin: 20px 0 50px;
 `;
+const LoaderWrapper = styled.div`
+  width: 100%;
+  height: 400px;
+  display: grid;
+  place-items: center;
+`;
 
 const Products = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,12 +44,16 @@ const Products = () => {
     addRef?.current?.resetFields();
   };
 
-  const products = useGetData(["products"], `/products?take=99999`);
+  const products = useGetData(["products"], `/products?take=99999`, {
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
       {products.isLoading ? (
-        "Loading"
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
       ) : (
         <Container>
           <Top>

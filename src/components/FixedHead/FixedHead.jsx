@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Admin } from "../../utils/context/AdminContext";
 import { RiAdminLine } from "react-icons/ri";
-import { AiOutlineSetting, AiOutlineLogout } from "react-icons/ai";
+import { AiOutlineLogout } from "react-icons/ai";
 import { Dropdown, Select } from "antd";
-import { useLang } from "../../utils/state";
 import i18next from "i18next";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../utils/state";
+import { queryClient } from "../..";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 10px;
@@ -52,15 +53,21 @@ const BtnItem = styled.div`
 `;
 
 const FixedHead = () => {
-  const { admin } = useContext(Admin);
-  const setLang = useLang((s) => s.setLang);
+  const user = useUser((s) => s.user);
+  const nav = useNavigate();
 
   const { t } = useTranslation();
 
   const items = [
     {
       label: (
-        <BtnItem>
+        <BtnItem
+          onClick={() => {
+            localStorage.removeItem("access_token");
+            queryClient.invalidateQueries("userGetMe");
+            nav("/signin");
+          }}
+        >
           <AiOutlineLogout />
           <span>{t("Sign out")}</span>
         </BtnItem>
@@ -109,7 +116,7 @@ const FixedHead = () => {
         ]}
       />
       <UserData>
-        <UserName>{admin.firstname + " " + admin.lastname}</UserName>
+        <UserName>{user?.name}</UserName>
         <Dropdown menu={{ items }} trigger={["click"]}>
           <AccBtn>
             <RiAdminLine />

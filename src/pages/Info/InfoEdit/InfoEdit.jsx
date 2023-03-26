@@ -3,8 +3,9 @@ import React, { useContext, useRef, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import { useEditData, usePostData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
+import Loader from "../../../components/Loader/Loader";
 
 const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
   const data = infos?.data?.data[0];
@@ -23,7 +24,7 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
         },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["infos"] });
+            queryClient.invalidateQueries("infos");
             message.success("Information was successfully changed");
             setModalOpen(false);
             // editRef.current.resetFields();
@@ -36,7 +37,7 @@ const InfoEdit = ({ infos, editRef, setModalOpen, telAddBtn }) => {
   return (
     <>
       {editMut.isLoading ? (
-        "loading"
+        <Loader />
       ) : (
         <Form
           ref={editRef}

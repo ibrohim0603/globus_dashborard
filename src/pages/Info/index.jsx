@@ -3,7 +3,8 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 // import parse from "html-react-parser";
-import { queryClient } from "../../App";
+import { queryClient } from "../../";
+import Loader from "../../components/Loader/Loader";
 import PostProductModal from "../../components/postProductModal/PostProductModal";
 import { useDeleteData, useGetData } from "../../utils/hooks";
 import InfoAdd from "./InfoAdd/InfoAdd";
@@ -43,7 +44,7 @@ const Info = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["infos"] });
+          queryClient.invalidateQueries("infos");
           message.success(
             t(
               "Information was successfully deleted! Refresh the page if the information is not deleted"
@@ -77,7 +78,7 @@ const Info = () => {
       cancelText: t("No"),
       onOk() {
         delBtn();
-        queryClient.invalidateQueries({ queryKey: ["infos"] });
+        queryClient.invalidateQueries("infos");
       },
       onCancel() {
         console.log("Cancel");
@@ -103,7 +104,7 @@ const Info = () => {
         </PostProductModal>
 
         {infos.isLoading ? (
-          "Loading"
+          <Loader />
         ) : (
           <Row gutter={[0, 15]} style={{ padding: 10 }}>
             <Col span={24}>
