@@ -9,12 +9,13 @@ import {
   Button,
   Upload,
 } from "antd";
-import { useEditData, useGetData, usePostData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { useEditData, useGetData } from "../../../utils/hooks";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
+import { instanceUpload } from "../../../utils/axios";
+import Loader from "../../../components/Loader/Loader";
 
-const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
-  const [photoId, setPhotoId] = useState(null);
+const AddProductForm = ({ editRef, setModalOpen, id }) => {
   const [fields, setFields] = useState(null);
   const { t } = useTranslation();
 
@@ -35,11 +36,8 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
           })
       );
     },
-    enabled: !!modalOpen || !!id,
+    enabled: !!id,
   });
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["products", id] });
-  }, [modalOpen]);
 
   const categs = useGetData(["categories"], "/category");
 
@@ -47,7 +45,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
 
   const props = {
     name: "photo",
-    action: "http://3.19.30.204/upload/upload",
+    action: instanceUpload,
     headers: {
       authorization: "authorization-text",
     },
@@ -56,7 +54,6 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        // setPhotoId(info.file.response.id);
         message.success(info.file.name + " " + t("file uploaded successfully"));
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -84,8 +81,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
       },
       {
         onSuccess: (d) => {
-          queryClient.invalidateQueries({ queryKey: ["products"] });
-          queryClient.invalidateQueries({ queryKey: ["products", id] });
+          queryClient.invalidateQueries("products");
           setModalOpen(false);
         },
       }
@@ -118,7 +114,7 @@ const AddProductForm = ({ editRef, setModalOpen, modalOpen, id }) => {
   return (
     <>
       {defVals.isLoading ? (
-        "Loading"
+        <Loader />
       ) : (
         <Form
           fields={fields}

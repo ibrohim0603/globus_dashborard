@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import React from "react";
+import Loader from "../../components/Loader/Loader";
 import { useGetData } from "../../utils/hooks";
 
 const Users = () => {
@@ -17,7 +18,7 @@ const Users = () => {
   return (
     <>
       {users.isLoading ? (
-        "Loading"
+        <Loader />
       ) : (
         <Table dataSource={dataSource} columns={columns} />
       )}

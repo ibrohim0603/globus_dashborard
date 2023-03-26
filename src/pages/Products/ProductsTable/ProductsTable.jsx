@@ -5,8 +5,9 @@ import { AiOutlineEdit, AiOutlineDelete, AiFillWarning } from "react-icons/ai";
 import PostProductModal from "../../../components/postProductModal/PostProductModal";
 import EditProductForm from "../EditProductForm/EditProductForm";
 import { useDeleteData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
+import { instanceImg } from "../../../utils/axios";
 
 const Container = styled.div`
   /* overflow-x: scroll; */
@@ -131,7 +132,7 @@ const ProductsTable = ({ data }) => {
       { id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["products"] });
+          queryClient.invalidateQueries("products");
         },
       }
     );
@@ -148,7 +149,7 @@ const ProductsTable = ({ data }) => {
       cancelText: t("No"),
       onOk() {
         delBtn(id);
-        queryClient.invalidateQueries({ queryKey: ["products"] });
+        queryClient.invalidateQueries("products");
       },
       onCancel() {
         console.log("Cancel");
@@ -178,7 +179,7 @@ const ProductsTable = ({ data }) => {
       photo: (
         <img
           style={{ width: 40 }}
-          src={`http://3.19.30.204/upload/${d?.photo?.path}`}
+          src={instanceImg + d?.photo?.path}
           alt="Not found"
         />
       ),

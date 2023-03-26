@@ -1,7 +1,7 @@
 import { Button, Table, Modal, message } from "antd";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { queryClient } from "../../App";
+import { queryClient } from "../../";
 import { useEditData, useGetData } from "../../utils/hooks";
 
 const Messages = () => {
@@ -20,7 +20,7 @@ const Messages = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["messages"] });
+          queryClient.invalidateQueries("messages");
           message.success(t("This message was successfully rejected"));
           setNum(null);
         },
@@ -38,7 +38,7 @@ const Messages = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["messages"] });
+          queryClient.invalidateQueries("messages");
           message.success(t("This message was successfully resolved"));
           setNum2(null);
         },

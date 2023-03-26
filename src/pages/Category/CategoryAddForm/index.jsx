@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react";
 import { Input, Form, Button, Upload, message } from "antd";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { usePostData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../index";
 import { useTranslation } from "react-i18next";
+import { instanceUpload } from "../../../utils/axios";
 
 const CategoryAddForm = ({ formRef, setModalOpen }) => {
   const { t } = useTranslation();
-  // const { queryClient } = useContext(QueryContext);
   const postMutate = usePostData("/category");
 
   const onFinish = (values) => {
@@ -15,7 +15,7 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
       { ...values, photoId: values?.photoId?.file?.response?.id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          queryClient.invalidateQueries("categories");
           formRef.current.resetFields();
           setModalOpen(false);
         },
@@ -28,7 +28,7 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
   };
   const props = {
     name: "photo",
-    action: "http://3.19.30.204/upload/upload",
+    action: instanceUpload,
     headers: {
       authorization: "authorization-text",
     },
@@ -37,7 +37,6 @@ const CategoryAddForm = ({ formRef, setModalOpen }) => {
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        // setPhotoId(info.file.response.id);
         message.success(info.file.name + " " + t("file uploaded successfully"));
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);

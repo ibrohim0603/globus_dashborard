@@ -10,8 +10,9 @@ import {
   Upload,
 } from "antd";
 import { useGetData, usePostData } from "../../../utils/hooks";
-import { queryClient } from "../../../App";
+import { queryClient } from "../../../";
 import { useTranslation } from "react-i18next";
+import { instanceUpload } from "../../../utils/axios";
 
 const AddProductForm = ({ addRef, setModalOpen }) => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
 
   const props = {
     name: "photo",
-    action: "http://3.19.30.204/upload/upload",
+    action: instanceUpload,
     headers: {
       authorization: "authorization-text",
     },
@@ -45,7 +46,7 @@ const AddProductForm = ({ addRef, setModalOpen }) => {
       },
       {
         onSuccess: (d) => {
-          queryClient.invalidateQueries({ queryKey: ["products"] });
+          queryClient.invalidateQueries("products");
           setModalOpen(false);
         },
       }

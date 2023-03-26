@@ -9,7 +9,7 @@ import {
 export const sidebarlinks = [
   {
     name: "Products",
-    link: "/products",
+    link: "/",
     icon: <BiBasket />,
   },
   {
