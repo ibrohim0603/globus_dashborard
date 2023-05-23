@@ -48,7 +48,7 @@ const PostForm = () => {
 export default PostForm;
 const props = {
   name: "photo",
-  action: "http://3.19.30.204/upload/upload",
+  action: "http://3.138.204.20/upload/upload",
   headers: {
     authorization: "authorization-text",
   },
